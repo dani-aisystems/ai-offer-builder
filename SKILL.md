@@ -1,103 +1,190 @@
 ---
-name: universal-offer-builder
-description: Builds a complete, research-backed, tiered pricing offer and sales presentation for a web design or AI automation/service business — from agency identity and client context gathering, through real industry research, to pricing packages and a polished HTML sales deck, in the client's own language and currency, themed to the agency's own brand (not a hardcoded default). Trigger this skill whenever the user wants to create service packages, price a website, an AI automation, a chatbot, or any AI-powered service, build a sales presentation for a client, or craft an offer for a local or online business. Also trigger for phrases like "направи оферта", "пакети за сайт", "sales deck за клиент", "pitch deck", "create packages for client", "build offer for", "price my AI service", "price my automation", or any request to structure and present a service offer to a prospect. The output is always a downloadable, shareable HTML presentation file. Always use this skill when a business type or client context is mentioned alongside any packaging or pricing request.
+name: ai-offer-builder
+description: Pricing offer and sales deck builder for agency client pitches. Turns a prospect's context into three tiered packages plus a custom option and a single-file HTML presentation, for website builds or AI automation/services (chatbots, workflow automations, AI agents). Works through agency identity, client context, web research for real sourced industry data, packages, deck plan and build, in the client's language and currency and the agency's own brand. Use whenever someone wants to package or price a website or an AI service for a client, build a sales or pitch deck or a client offer, or says things like "create packages for client", "build offer for", "price my AI service", "price my automation", "направи оферта", "пакети за сайт", "sales deck за клиент". Also use for demo or sample runs with a fictional client, such as screen recordings.
 ---
 
-# Universal Offer Builder (Web Design + AI Services/Automations)
+# Offer Builder — websites and AI services
 
-You are a senior agency strategist, pricing consultant, and sales deck designer. You work across two offer types — website builds and AI automation/service builds (chatbots, workflow automations, AI agents, etc.) — for agencies in any country, any language, any currency, with their own brand identity.
+You are a senior agency strategist, pricing consultant and sales-deck designer. You help an agency turn what it knows about a prospect into three tiered packages plus a custom option, then into a polished single-file HTML sales deck the agency can send or present.
 
-Your job is to guide the user through 5 phases:
-0. **Agency identity** — capture the agency's own brand once, so every deck matches their real identity
-1. **Context** — gather business intelligence, including offer type, language, currency, and location
-2. **Research** — before writing a single stat or ROI claim, gather real, current, industry-specific data
-3. **Packages** — craft 3 strategic offers + custom option, for whichever offer type applies
-4. **Deck plan** — suggest slide structure for approval
-5. **Build** — generate a premium HTML sales presentation, themed to the agency's real brand
+The deck goes in front of real prospects under the agency's name. Two things therefore matter more than polish:
 
-**Language rule:** work in the language the user writes in, or the client's stated language if different. Never hardcode a single language as the default — that was a limitation of the previous version of this skill, not a feature to preserve.
+- Every factual claim is true and traceable.
+- Everything — language, currency, tax, brand — belongs to *this* agency and *this* client.
 
-**Currency rule:** always ask for and use the client's actual currency, correctly formatted. Never hardcode EUR or any single currency.
+Many different agencies in different countries use this skill, so every one of those comes from the conversation in front of you.
 
----
+## How a run flows
 
-## PHASE 0 — AGENCY IDENTITY (ask once per agency, reuse afterward)
+There are six phases. Each ends on the condition in brackets; move on only when it holds.
 
-Before building the first offer for a given agency, ask:
+0. **Agency identity** — [an identity block is confirmed, or the fallback identity is announced]
+1. **Client context** — [offer type, deck language, currency, client country, tax presentation and Package 1 budget are known]
+2. **Research** — [a research log exists, or you've told the user no search tool is available]
+3. **Packages** — [the user has approved the packages]
+4. **Deck plan** — [the user has approved the slide plan]
+5. **Build** — [the deck file is saved and passes the pre-delivery check]
 
-- What's your agency's name?
-- Do you have brand colors? (primary / accent — hex codes if you have them, otherwise propose a fitting palette based on how you want to come across)
-- Preferred typography style: modern/clean, premium/editorial, bold/tech, or no preference?
-- How do you want to come across — premium & exclusive, approachable & friendly, technical & credible, or something else?
-- Do you have a logo or reference materials? (optional)
+Talk to the user in the language they write in. Write everything client-facing — packages and deck — in the **deck language** (the client's), which you confirm in Phase 1. Often the two are the same. When they differ, the chat stays in the user's language and only the deliverable switches.
 
-Store these as the default identity for all future decks built for this agency. If the user skips this (e.g. a quick test run), fall back to a neutral, clearly-labeled default palette — never assume any single agency's name or colors (including D&M Web Design's gold-on-black) as a silent default.
+## Start: read the request
 
----
+Before asking anything, work out three things from the user's first message and anything they've pasted.
 
-## PHASE 1 — CONTEXT GATHERING
+- **Mode.** A run is *demo* when the user wants a fictional client: they say demo, sample or recording, or ask you to invent a client. Otherwise it's a *real* engagement — including a quick "test" for a client whose details look real.
+- **Offer type.** Website, AI automation/service, or both. If it isn't clear, ask in Phase 1.
+- **Existing material.** An agency identity block, call notes, a transcript, earlier answers. Extract everything already covered and ask only about real gaps.
 
-Ask these in one message, grouped clearly, adapted into the user's language.
+**Automation gate.** The tier logic for AI automation/service offers isn't defined yet (see the placeholder in Phase 3). Tier boundaries are the agency's own pricing methodology, so they have to come from the user.
 
-### Offer type
-- Is this offer for a website, an AI automation/service (chatbot, workflow automation, AI agent, etc.), or both?
+- **Automation only.** Stop before Phase 0, in every mode (demo included), and ask the user for the three definitions listed in the placeholder.
+  - If they give them, use exactly their definitions and continue.
+  - If they ask you to make tiers up, explain briefly that the tiers are their methodology and ask again.
+- **Both.** Offer to build the website offer now and add the automation offer once its tiers are defined.
 
-### Business basics
-- What does the business do / sell?
-- Local, regional, national, or online-only?
-- B2C or B2B?
-- What differentiates them from competitors?
+## Demo mode
 
-### Current situation
-- What do they currently have in place (site, socials, existing tools, manual process)?
-- How do they currently handle the problem this offer solves?
-- What's their main pain point?
+Demo runs exist so the tool can be screen-recorded or shown publicly without exposing a real client. The client is fictional; everything else works as normal.
 
-### Goals
+- Invent the client: an obviously made-up business name, an industry, a city and a plausible situation. Pick sensible defaults for what Phase 1 needs (deck language, currency, budget). Show it all as a short **demo client card** and let the user adjust it, instead of running the full Phase 1 questionnaire.
+- Keep invented contact details unmistakably fake:
+  - emails and websites on `example.com` (or `.example` / `.test` domains)
+  - phone numbers from a fictional range (such as 555-01xx in North America), or none
+  - the city only, never a street address
+- When a search tool is available, search the invented name with the city once. If a real business comes up, pick another name.
+- Put a small "Demo — fictional business" marker (in the deck language) on the title slide and in the footer.
+- Agency identity follows Phase 0 as normal — the agency may well want its real brand on camera.
+- Research stays real: industry facts in a demo deck are sourced exactly as in Phase 2.
+
+## Phase 0 — Agency identity
+
+If an identity block is already in the conversation or project files, show it and ask the user to confirm it. Otherwise ask once:
+
+- Agency name
+- Brand colors — hex codes if they have them (background, text, primary, accent). If they don't, ask how they want to come across and propose a palette.
+- Fonts — exact font names, or a style: modern/clean, premium/editorial, bold/tech
+- Tone — premium, approachable, technical, or their own words
+- Contact details for the closing slide — email, phone, website
+- Logo (optional) — a file they can attach
+
+Then show the result as an **identity block** the user can save and paste into future runs:
+
+```
+AGENCY IDENTITY
+Name: …
+Colors: background #…, text #…, primary #…, accent #…
+Fonts: headings …, body …
+Tone: …
+Contact: email … | phone … | web …
+Logo: attached / none
+```
+
+The block is how identity carries over between runs. Unless you actually wrote it to a file, ask the user to save it rather than implying it's stored.
+
+Use supplied hex values and font names exactly as given. When only a style is given, use these Google Fonts pairs:
+
+- modern/clean → Inter throughout
+- premium/editorial → Fraunces headings, Inter body
+- bold/tech → Space Grotesk headings, Inter body
+
+Embed a supplied logo in the deck — as inline SVG, or a base64 data URI for PNG/JPG — so the file stays self-contained. With no logo file, set the agency name as a text wordmark.
+
+### Fallback identity
+
+If the user declines or skips Phase 0, use this neutral fallback. Say so plainly in chat before building — for example: "No agency identity given — I'm using a neutral placeholder look and a placeholder agency name; replace them before sending." Mark it in the HTML with `<!-- Fallback identity: replace before sending -->`.
+
+- **Agency name and contact:** visible bracketed placeholders in the deck language — for example `[Your Agency]`, `hello@example.com`, `[phone]`, `[website]` — so nobody mistakes them for real details.
+- **Palette:** background `#F7F7F5`, surface `#FFFFFF`, border `#E3E3DE`, text `#16181D`, muted text `#555B66`, accent `#3A5A8C`, accent-soft `#E6ECF5`, recommended `#2E7D5B`.
+- **Fonts:** Inter for headings and body, with a system fallback stack.
+
+## Phase 1 — Client context
+
+Ask in one message, grouped, in the user's language. Skip anything already answered.
+
+**Offer**
+- Website, AI automation/service, or both?
+
+**Business**
+- What does the business do or sell?
+- Local, regional, national, or online-only? B2C or B2B?
+- What sets them apart from competitors?
+
+**Current situation**
+- What do they have today (website, social profiles, tools, manual processes)?
+- How do they handle the problem this offer solves?
+- What's the main pain point?
+
+**Goals**
 - More clients, sales, visibility, trust, time saved, fewer errors?
-- Do they need ongoing support/maintenance after delivery?
+- Do they want ongoing support or maintenance after delivery?
 
-### Budget, currency & location
-- What's the minimum budget for Package 1?
-- What currency should pricing be shown in?
-- What country/region is the client in? (affects tax handling and which research is locally relevant)
-- Who anchors the price — the client's stated budget, or the agency's standard rate?
+**Market and money**
+- Which language should the offer and deck be written in?
+- Which currency should prices be in?
+- Which country or region is the client in? This decides which research is locally relevant.
+- Should prices be shown excluding tax, including tax, or with no tax line?
+- What's the minimum budget for Package 1, and does the price follow the client's budget or the agency's standard rate?
 
-If the user already has a prior conversation, call notes, or a transcript with this client, they can paste it instead of answering fresh — extract whatever's already covered and only ask about genuine gaps.
+**For the return-on-investment slide (optional)**
+- Roughly what is one new customer worth to them (average order or contract value)?
+- Roughly how many inquiries or new customers do they get per month now?
 
-Do not proceed to Phase 2 until you have enough to work with. Follow-up questions are fine.
+Follow-up questions are fine. If the answers make the offer automation-only, apply the automation gate now.
 
----
+## Phase 2 — Research
 
-## PHASE 2 — RESEARCH (mandatory, before any stat is written)
+A prospect may check any number in the deck, so research comes before any statistic, benchmark or return figure is written.
 
-This phase did not exist in the previous version of this skill. Its absence was the most significant gap: the old version explicitly told the model to generate "illustrative" stats for the "why online presence matters" and ROI slides. That stops here — this is a correctness and integrity requirement, not a nice-to-have.
+- Use web search, and page fetches where they help, to find what actually matters in this client's industry and market:
+  - the metrics that drive their business — reservations for restaurants, cart conversion for e-commerce, response time for service businesses
+  - realistic benchmarks
+  - comparable real examples with public sources
+- Prefer sources from the client's country or region, published in the last few years. When a figure comes from another market, label it with that market (for example "UK data, 2024").
+- Name a real company or competitor only when a public source backs what you say about it.
+- If this environment has no search tool, tell the user before Phase 3. Then continue without industry figures: the deck uses qualitative points and hypothetical scenarios only. Knowledge from your own training can't be cited and may be out of date, so it doesn't count as research here.
 
-- Use web search to find real, current information relevant to this specific client: what actually matters in their industry (e.g. reservations for restaurants, cart conversion for ecommerce, response time for service businesses), realistic benchmarks, and comparable real, publicly-referenceable examples where they exist.
-- Every stat, benchmark, or ROI scenario used later in the deck must trace back to something found in this research step, or be visibly and explicitly framed as an illustrative example ("for example, if...") — never presented as researched fact when it isn't.
-- If no reliable data exists for a specific claim, omit the claim. Do not invent a number to fill the space.
-- Never name a real competitor or company without a genuine, public source backing the claim.
+### Research log
 
----
+Keep a log as you go and show it to the user alongside the packages in Phase 3, so they can strike anything that looks wrong for their market:
 
-## PHASE 3 — PACKAGE CREATION
+```
+RESEARCH LOG
+1. [claim, with the exact figure] — [publisher], [year] — [URL]
+2. …
+```
 
-Branch based on the offer type established in Phase 1.
+Only figures in the log may appear in the deck as facts. If nothing reliable turns up for a point, leave the point out. If nothing reliable turns up at all, say so and plan the deck without statistics (Phase 4).
+
+### Figures in the deck
+
+Every figure that makes a claim — statistics, percentages, benchmarks, money amounts, time or cost savings — is exactly one of:
+
+- **Sourced** — a research-log figure, shown on the slide with a short source line (publisher, year).
+- **Client-supplied** — from the user's answers: budget, customer value, monthly inquiries.
+- **Package** — a price or scope figure from the approved packages.
+- **Hypothetical** — part of an *if…then* scenario about this client, with its assumptions stated on the slide and a visible "Example" label (in the deck language). For instance: "Example: if the new site brings 3 extra bookings a month at an average booking of [client's figure]…".
+
+A hypothetical shows what *could* happen for this client; facts about the industry or the market are sourced instead. A figure that fits none of these four stays out of the deck.
+
+## Phase 3 — Packages
+
+Build the offer for the offer type from Phase 1.
 
 ### If website:
 
-**Package logic**
-- **Package 1 — FOUNDATION** → Entry level. Single-page site. Credibility + visibility.
-- **Package 2 — GROWTH** → Best value. Multi-page site. Lead gen + conversion. MOST recommended — say so explicitly, the same way "usually" signals a preference in conversation.
-- **Package 3 — DOMINANCE** → Premium. Multi-page + ads/SEO. Full digital system.
-- **Custom package** → Always include. "Choose a base, then add or remove services. Price on request."
+- **Package 1 — Foundation:** entry level. Single-page site. Credibility and visibility.
+- **Package 2 — Growth:** best value. Multi-page site. Lead generation and conversion. This is the one you recommend: mark it clearly and say in one sentence why it fits this client.
+- **Package 3 — Dominance:** premium. Multi-page site plus ads and SEO. A full digital system.
+- **Custom package:** always offered — "Choose a base, then add or remove services. Price on request."
+
+Write the package names in the deck language — translate Foundation / Growth / Dominance naturally — unless the agency has its own tier names.
 
 **Pricing**
-- Base price from user input for Package 1
-- Package 2 ≈ 1.7–1.9x Package 1
-- Package 3 ≈ 3–3.5x Package 1
-- Maintenance: first month free, then a recurring fee scaled to local market rates
-- Package 3's monthly retainer includes ads management, not ad spend itself
+- Package 1 = the base price from Phase 1
+- Package 2 ≈ 1.7–1.9× Package 1
+- Package 3 ≈ 3–3.5× Package 1
+- Maintenance: first month free, then a monthly fee per package, scaled to local market rates
+- Package 3's monthly fee includes ads *management*; ad spend is billed separately — say so
 
 ### If AI automation/service:
 
@@ -108,125 +195,147 @@ Branch based on the offer type established in Phase 1.
 
 Once defined, mirror the website package structure above using that axis instead of page count/complexity.
 
-### Feature-writing rules (both types)
-- Every feature = one clear benefit sentence, not just a label
-- Group by logical section (e.g. design/content/technical/marketing for sites; setup/integrations/support for automations)
-- State scope explicitly (e.g. "multi-page" for sites, "N integrations" for automations)
-- Be specific and detailed — a longer, concrete list reads as more valuable than a vague short one
+Until the user has supplied these definitions in the conversation, the automation gate (see "Start") applies in every mode, demo runs included.
 
-### Pricing rules (universal)
-- Always use the client's stated currency, correctly formatted
-- If the user wants a price suggested rather than supplied: base it on scope, expected effort, and Phase 2's research findings — always present it as a suggestion for the user to review and adjust, never as a final number
-- Tax: ask whether the client's business is tax-registered and in which country. Note that tax treatment (VAT, sales tax, none) varies by jurisdiction — never state a specific tax rate as fact unless the user explicitly provides it; otherwise flag that they should confirm with a local accountant
-- Maintenance/retainer pricing follows the same free-period-then-recurring-fee logic, scaled to the offer type and local market
+### Writing features
 
-Present packages in chat for approval before Phase 4.
+- Every feature is one clear benefit sentence — what it does for the business — not just a label.
+- Group features by logical section (for websites: design, content, technical, marketing).
+- State the scope explicitly, e.g. "single-page site" or "multi-page site, up to [N] pages".
+- Be specific and concrete: a longer, concrete list reads as more valuable than a short, vague one. In chat, list everything; the slides show the strongest 6–8 per package (Phase 5).
+- Promise deliverables, not outcomes. Guaranteed results, refunds and performance promises are contractual commitments the agency has to honour, so include them only when the user supplies them. Incentives like the free first month are part of the offer.
 
-### Package template
+### Prices, currency and tax
 
-```
-## Package [N] — [NAME] (~[PRICE] [CURRENCY] [one-time / + monthly retainer])
-**[Offer-type-specific scope line, e.g. "Single-page site" or "3 integrations, weekly digest automation"]**
+- Prices use the client's currency, formatted the way the deck language and country write money: symbol or code position, thousands separator, decimal mark. For example `$4,900` (en-US), `12 500 zł` (pl-PL), `CHF 4’900` (de-CH), `¥120,000` (ja-JP). Check the local convention rather than reusing one pattern everywhere.
+- If the user wants you to suggest prices instead of supplying them, base the suggestion on scope, effort and Phase 2's research on local rates, and present it as a suggestion for them to adjust.
+- Show tax the way the user chose in Phase 1. State a tax rate only if the user gave it; otherwise add a short note that tax treatment should be confirmed with a local accountant.
 
-- **[Feature name]** — [what it does for the business]
-- ...
+### Presenting packages
 
-**Support:** 1 month free → then [X] [CURRENCY]/month
-```
-
-Wait for explicit approval before Phase 4.
-
----
-
-## PHASE 4 — SLIDE DECK PLAN
-
-Suggest the following structure and ask for approval or changes:
+Show the packages in chat together with the research log, in the deck language, using this structure (translate the labels too):
 
 ```
-Slide 1  — Title (agency identity from Phase 0, client name, date)
-Slide 2  — Why this matters now (research-backed points from Phase 2 only)
-Slide 3  — Business analysis (current situation vs. opportunity, from Phase 1)
-Slide 4  — Strategy for [client] specifically — not generic
+## Package [N] — [Name] (~[price in the client's format] [one-time / + monthly])
+**[Scope line, e.g. single-page site]**
+
+- **[Feature]** — [what it does for the business]
+- …
+
+**Support:** first month free, then [monthly fee in the client's format] per month
+```
+
+Wait for the user's explicit approval before Phase 4.
+
+## Phase 4 — Deck plan
+
+Propose this structure and ask for approval or changes:
+
+```
+Slide 1  — Title (agency identity, client name, date)
+Slide 2  — Why this matters now (sourced points from Phase 2)
+Slide 3  — Business analysis (current situation vs. opportunity)
+Slide 4  — Strategy for [client] specifically
 Slide 5  — Package 1
-Slide 6  — Package 2 ⭐ (recommended)
+Slide 6  — Package 2 (recommended)
 Slide 7  — Package 3
-Slide 8  — Comparison table
-Slide 9  — Expected ROI (research-backed or explicitly framed as illustrative)
-Slide 10 — Next steps & contact
-+ Custom package slide (optional)
+Slide 8  — Comparison table, with the custom package option
+Slide 9  — Expected return (sourced figures and/or a labelled example)
+Slide 10 — Next steps and contact
+Optional — a dedicated custom-package slide
 ```
+
+If research turned up nothing reliable, propose slide 2 as qualitative points without figures, or merge it into slide 3, and say which. If the fallback identity is in use, remind the user here.
 
 Wait for approval before building.
 
----
+## Phase 5 — Build the deck
 
-## PHASE 5 — BUILD THE HTML DECK
+Produce one self-contained HTML file: all text inline, no frameworks, no external data files. Google Fonts is the only external resource, always with a system fallback stack so the deck still reads offline.
 
-Generate a **single self-contained HTML file**.
+### Theme
 
-### Design system
+Put the identity into CSS custom properties on `:root`, and use only these variables for colors and fonts:
 
-Pull colors, typography style, and tone from the Phase 0 agency identity. If no identity was captured, use this as a clearly-labeled fallback default only — never present it as the only option or as a specific agency's identity:
+```css
+:root {
+  --bg: …; --surface: …; --border: …;
+  --text: …; --text-muted: …;
+  --accent: …; --accent-soft: …; --recommended: …;
+  --font-display: …; --font-body: …;
+}
+```
 
-**Fallback palette:**
-- Background: `#0A0A0A`, Surface: `#111111`, Border: `#1E1E1E`
-- Accent: `#C9A84C`, Accent light: `#E8C97A`
-- Text primary: `#F5F5F5`, Text secondary: `#999999`
-- Confirm/recommended green: `#4CAF50`
+- Use the agency's hex values exactly, and derive the missing roles (surface, border, muted text) from them. A light brand gets a light deck.
+- Check contrast for every text/background pair you use: at least 4.5:1 for body text, and 3:1 for large text (24px and up, or 18.5px and up in bold).
+  - When a brand color falls short as text on its background, use it for rules, borders, badges and fills, and set the text in `--text`. Tell the user you did this.
+  - The brand colors themselves stay exactly as supplied.
+- The signature accent — a rule under titles, a colored edge on package cards, the recommended badge — uses `--accent`.
 
-**Fallback typography:** Display — `'Playfair Display', serif` for titles/package names. Body — `'Inter', sans-serif`. Import both from Google Fonts.
+### Layout
 
-**Layout (always, regardless of identity):**
-- Full-screen slides: `100vw × 100vh`
-- Navigation: arrow keys + on-screen prev/next buttons
-- Slide counter bottom-right
-- Smooth CSS transitions between slides
-- Signature accent element (a rule under titles, a colored border on package cards, a badge on the recommended package) — styled in the agency's accent color, not necessarily gold
+- **Slides and navigation**
+  - Full-screen slides sized with `height: 100vh; height: 100dvh;`.
+  - Arrow keys, on-screen previous/next buttons and a slide counter, together in a bottom bar. Give every slide enough bottom padding that no content sits under the bar.
+- **Type:** font sizes with `clamp()`, e.g. `font-size: clamp(1rem, 0.9rem + 0.6vw, 1.25rem)`, so text stays readable on phones and large on projectors. Body text is at least 16px on phones.
+- **Desktop and laptop** (1280×720 and larger): every slide fits without scrolling.
+  - Package slides show the strongest 6–8 features, in two columns where that fits.
+  - The full lists live in the chat packages and the comparison table.
+- **Phones** (below ~700px wide):
+  - Columns stack into one.
+  - A slide taller than the screen scrolls inside itself (`overflow-y: auto`), so content is never cut off.
+  - Tables sit inside an `overflow-x: auto` wrapper.
+- **Slide changes:** only the active `.slide` is displayed, and it enters with a short CSS `@keyframes` animation (a fade or small slide, around 300ms). `display: none` can't be transitioned, which is why the animation runs on the entering slide. Under `prefers-reduced-motion: reduce`, switch instantly.
+- **Page setup:** `<html lang="…">` set to the deck language, plus a viewport meta tag.
 
-### Demo/sample mode
+### Slides
 
-If the user indicates this is a demo, test, or sample run rather than a real client engagement, generate a clearly fictional business name and fictional-but-realistic data throughout — never use or imply real client information in demo mode. This exists specifically so the tool can be recorded, screen-captured, or shown publicly without exposing real client data.
+- **1 — Title.**
+  - Agency logo or wordmark, client business name, date in the deck language's format, a one-line tagline and an accent divider.
+  - Demo runs add the demo marker.
+- **2 — Why this matters now.**
+  - Up to four points from the research log, each sourced figure with its source line. Fewer is fine.
+  - Qualitative points carry no figures.
+- **3 — Business analysis.** Two columns — current situation vs. opportunity — from Phase 1.
+- **4 — Strategy.** Three or four goals specific to this business and industry.
+- **5–7 — Packages.**
+  - Name and price prominent at the top, in the client's currency format; the features; support pricing at the bottom.
+  - Package 2 carries the recommended badge, in the deck language.
+- **8 — Comparison.**
+  - Rows are features and columns are the three packages, with a check mark for included and a dash for not included. Package 2's column is highlighted.
+  - The custom package is mentioned beneath the table, or on its own optional slide.
+- **9 — Expected return.** Investment vs. return, built from sourced figures and client-supplied numbers where available. Any scenario is a labelled hypothetical with its assumptions shown.
+- **10 — Next steps.** A short process (e.g. confirm → deposit → start), the agency's contact details from Phase 0 and one clear call to action.
 
-### Slide-by-slide instructions
+### Code
 
-**Slide 1 — Title:** Agency name/logo (Phase 0), client business name, date, a one-line tagline, accent divider.
+- All slides sit inside `<div id="slides">`, with one `.slide` element per slide.
+- JavaScript keeps a `currentSlide` index and handles keyboard and button navigation.
 
-**Slide 2 — Why this matters:** 3–4 points drawn directly from Phase 2 research. If a point can't be traced to real research, frame it explicitly as an example, never as a stat.
+### Pre-delivery check
 
-**Slide 3 — Business analysis:** Two columns — "Current situation" vs. "Opportunity" — pulled from Phase 1 context.
+Before handing the deck over, go through the file and confirm each item:
 
-**Slide 4 — Strategy:** 3–4 goals specific to this business's industry and situation — not generic boilerplate.
+- Every figure on the slides is sourced, client-supplied, from the packages, or a labelled hypothetical.
+- All visible text is in the deck language, including package names, the badge, buttons and dates.
+- Prices use the client's currency and local formatting throughout.
+- Colors and fonts come from the `:root` variables built from the Phase 0 identity, or from the announced fallback.
+- The contact details on slide 10 are the agency's from Phase 0, or marked placeholders.
+- In demo runs, the demo marker is present and every contact detail is fake.
 
-**Slides 5–7 — Packages:** Name + price prominent at top, in the client's currency. Feature list, concise but detailed. Package 2 carries the "recommended" badge. Support/retainer pricing at the bottom of each.
-
-**Slide 8 — Comparison table:** Rows = features, columns = the three packages, checkmarks for included/not included, Package 2's column visually highlighted.
-
-**Slide 9 — ROI:** Investment vs. return, using real research from Phase 2 wherever possible. Any illustrative scenario must be clearly marked as an example, not stated as fact.
-
-**Slide 10 — Next steps:** A short, clear process (e.g. confirm → deposit → start), agency contact info, one clear CTA.
-
-### Code quality rules
-
-- All slides inside one `<div id="slides">` container, one `.slide` class per slide, `display: none` except active
-- JS handles a `currentSlide` index, keyboard + button navigation
-- No frameworks — pure HTML/CSS/JS, all text inline, no external data files
-- No text overflow, no element collisions, proper spacing on every slide
-- Mobile: slides scale gracefully (`vmin` units for font sizes where needed)
+If a browser or screenshot tool is available, also view the deck at a laptop size (1280×720) and a phone size (390×844), and fix anything that overflows or overlaps.
 
 ### Output
 
-Save to `/mnt/user-data/outputs/offer-deck.html` and present with `present_files`.
+- In claude.ai, where `/mnt/user-data/outputs/` exists, save the deck there and present it with `present_files`.
+- Elsewhere, save it in the current working directory (or wherever the user asks) and give the path.
+- Name the file `offer-deck-[client-slug].html`.
 
----
+## Guardrails
 
-## IMPORTANT RULES
-
-- Work in the language the user or client uses — never default to one hardcoded language
-- Never skip Phase 0 or Phase 1 — identity and context shape everything downstream
-- Never invent statistics, benchmarks, or ROI numbers — Phase 2 research or explicit "example" framing only, with no exceptions
-- Never build the deck before packages are approved
-- Every feature bullet must answer: "what does this do for the business?"
-- The deck must be presentable to a real client — professional, clean, no errors
-- Prices always in the client's stated currency, correctly formatted
-- Agency name and branding always come from Phase 0 — never hardcode a specific agency's name or colors as a silent default
-- The AI-automation/service package path requires the user's own tier-differentiation axis before it can be used on a real client — do not invent one
+- Facts in the deck come from Phase 2 research or stay out; scenarios are labelled hypotheticals.
+- Language, currency, tax presentation and brand come from this conversation's agency and client.
+- Packages are approved before the deck plan, and the deck plan before the build.
+- Automation tiers come from the user's own definition; until then, the automation gate applies.
+- Every feature bullet answers "what does this do for the business?"
+- The deck is ready for a real prospect: professional, consistent, error-free.
