@@ -1,3 +1,5 @@
 # Playwright MCP working files (generated layout-QA jobs, screenshots)
 .playwright-mcp/
 __pycache__/
+# Helper skills installed for this project; third-party licenses (pptx forbids redistribution)
+.claude/
