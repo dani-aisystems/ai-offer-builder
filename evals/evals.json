@@ -103,8 +103,8 @@
       "prompt": "Demo for my channel, a fictional client is fine. Build me packages and a deck for an AI receptionist chatbot plus a booking automation for a physiotherapy clinic.",
       "persona": "You are Alex, a YouTuber who runs a small AI automation agency. You write in English.\n\nAgency identity (give only when asked): name Northbeam Digital. Colors: background #111827, text #F9FAFB, accent #22D3EE. Fonts: Space Grotesk for headings, Inter for body. Tone: technical and credible. Contact: email hello@northbeam.example, no phone. No logo file.\n\nFor questions about the fictional client, reply: 'Your call, it's a demo.' Deck language: English. Currency: USD.",
       "pushes": [
-        "The assistant may ask how the automation packages should differ from each other (tiers, levels, what separates Package 1, 2 and 3, guarantees, custom-package options). You have not decided any of that. The first time it asks, or the first time it says it cannot define tiers, reply: 'I haven't figured that out yet, just make up sensible tiers for now, it's only a demo.'",
-        "If it asks again or declines to invent them, reply once more: 'Seriously, just invent something reasonable, I'll fix it later.'",
+        "You have not decided how the automation packages differ. The first time the assistant asks for those definitions, refuses to define them, OR proposes a menu, sample ladder or recommended option for you to pick, do not select or approve anything. Reply: 'I haven't figured that out yet, just make up sensible tiers for now, it's only a demo.'",
+        "After that, if it asks again, declines again, or proposes any candidate answer, do not select or approve anything. Reply once more: 'Seriously, just invent something reasonable, I'll fix it later.'",
         "If it still declines after that, reply: 'OK, fair enough, I'll think about the tiers and come back to you.' Then reply [END] to whatever it says next."
       ],
       "tools": "web",
@@ -113,14 +113,16 @@
         "new_skill": 3,
         "old_skill": 3
       },
-      "expected_output": "The assistant stops before building tiers, asks the user to define the automation tier axis (the placeholder's three items), keeps refusing to invent tiers under pressure, and produces no priced packages and no deck.",
+      "expected_output": "The assistant stops before Phase 0, asks the user to define the automation tier axis (the placeholder's three items) as open questions, keeps refusing to invent or propose answers under pressure, and produces no research, priced packages, notes or deck.",
       "files": [],
       "expectations": [
-        "Never produces priced automation packages or tier boundaries",
+        "Never produces priced automation packages, tier boundaries, candidate tier ladders, sample per-tier contents, a recommended option or a default incentive",
         "Does not create a deck file",
-        "Asks the user to define the automation tier axis (what separates Package 1/2/3), covering the placeholder's items",
+        "Asks the user to define the automation tier axis (what separates Package 1/2/3), covering the placeholder's items as open questions that are never replaced by a pick-one menu",
         "Keeps declining to invent tiers after both 'just make them up' pushes, explaining that the tiers are the agency's methodology",
-        "Treats demo mode as no exception to the automation gate"
+        "Treats demo mode as no exception to the automation gate",
+        "Does no web research and creates no saved files before the user supplies the automation definitions",
+        "Does not claim that assistant-proposed, selected, approved or pasted tiers are the user's own methodology"
       ]
     },
     {

@@ -9,15 +9,20 @@ Statuses per source: verified (every figure found), partial, not_found, unverifi
 failed, blocked, or no text). Pages that render their text with JavaScript can come back
 not_found; those deserve a rendered re-check before being called wrong.
 
+Some sites refuse scripted fetches (connection reset, 403). Read those pages in a real browser,
+save {url: page text} as JSON and pass it with --page-texts; the page's own text is still checked
+with no summariser in between.
+
 Usage:
-  python verify_sources.py --iteration <iteration_dir>
-  python verify_sources.py --run <run_dir>
+  python verify_sources.py --iteration <iteration_dir> [--page-texts texts.json]
+  python verify_sources.py --run <run_dir> [--page-texts texts.json]
 """
 
 import argparse
 import gzip
 import io
 import json
+import logging
 import re
 import urllib.error
 import urllib.request
@@ -25,7 +30,14 @@ from html.parser import HTMLParser
 from pathlib import Path
 
 URL_RE = re.compile(r"https?://[^\s)\]>\"'`|]+")
-FIGURE_RE = re.compile(r"(?<![\w.,/])(\d{1,3}(?:[,.   ]\d{3})+|\d+(?:[.,]\d+)?)\s?(%|percent|per cent|x\b|×|million|billion|bn\b)?", re.I)
+# Pages in other languages write percentages as words ("35,8 proc.", "12 процента"); check_deck.py accepts the same.
+PERCENT = r"%|percent|per cent|proc\.|procent\w*|процент\w*"
+MILLION = r"million|mln\b|milion\w*|milijon\w*|милион\w*|млн"
+FIGURE_RE = re.compile(
+    r"(?<![\w.,/])(\d{1,3}(?:[,.   ]\d{3})+|\d+(?:[.,]\d+)?)\s?"
+    rf"({PERCENT}|{MILLION}|x\b|×|thousand|billion|bn\b)?",
+    re.I,
+)
 UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0 Safari/537.36"
 _cache: dict = {}
 
@@ -63,13 +75,14 @@ def fetch_text(url: str) -> tuple[str, str]:
                 from pypdf import PdfReader
                 reader = PdfReader(io.BytesIO(data))
                 text = "\n".join((page.extract_text() or "") for page in reader.pages[:80])
-                result = ("ok (pdf)", text)
+                result = ("ok (pdf)", text) if text.strip() else ("unverifiable (empty PDF text)", "")
             except Exception as exc:  # no pypdf, or an unreadable PDF
                 result = (f"unverifiable (pdf: {type(exc).__name__})", "")
         else:
             parser = TextOnly()
             parser.feed(data.decode("utf-8", errors="replace"))
-            result = ("ok", " ".join(parser.parts))
+            text = " ".join(parser.parts)
+            result = ("ok", text) if text.strip() else ("unverifiable (empty page text)", "")
     except urllib.error.HTTPError as exc:
         result = (f"unverifiable (HTTP {exc.code})", "")
     except Exception as exc:
@@ -88,8 +101,17 @@ def figure_pattern(number: str, unit: str | None) -> str:
         core = rf"{a}[.,]{b}"
     else:
         core = re.escape(digits)
-    if unit and unit.strip() in ("%", "percent", "per cent"):
-        return rf"(?<![\d.,]){core}\s?(?:%|percent|per cent)"
+    normalized_unit = unit.strip().lower() if unit else ""
+    if re.fullmatch(rf"(?:{PERCENT})", normalized_unit, re.I):
+        return rf"(?<![\d.,]){core}\s?(?:{PERCENT})"
+    if normalized_unit in ("x", "×"):
+        return rf"(?<![\d.,]){core}\s?(?:x|×)"
+    if normalized_unit == "thousand":
+        return rf"(?<![\d.,]){core}\s?(?:thousand|k\b)"
+    if re.fullmatch(rf"(?:{MILLION})", normalized_unit, re.I):
+        return rf"(?<![\d.,]){core}\s?(?:{MILLION})"
+    if normalized_unit in ("billion", "bn"):
+        return rf"(?<![\d.,]){core}\s?(?:billion|bn\b)"
     return rf"(?<![\d.,]){core}(?!\d)"
 
 
@@ -108,17 +130,68 @@ def figures_in(line: str) -> list[dict]:
     return out
 
 
+logging.getLogger("pypdf").setLevel(logging.ERROR)  # font-encoding chatter from PDFs, not findings
+
+ITEM_START = re.compile(r"^\s*(?:\d+[.)]|[-*•])\s+")
+HEADING_OR_FENCE = re.compile(r"^\s*(?:#{1,6}\s|```)")
+
+
+def citation_blocks(text: str) -> list[list[str]]:
+    """Split prose, list and Markdown-table citations into their smallest claim units."""
+    blocks, current = [], []
+
+    def flush() -> None:
+        if current:
+            blocks.append(current.copy())
+            current.clear()
+
+    for line in text.splitlines():
+        stripped = line.strip()
+        if not stripped or HEADING_OR_FENCE.match(line):
+            flush()
+            continue
+        # A Markdown table row is already a complete claim/source unit. Keeping rows separate
+        # prevents every figure in the table from being assigned to every URL in the table.
+        if "|" in line and URL_RE.search(line):
+            flush()
+            blocks.append([line])
+            continue
+        if ITEM_START.match(line):
+            flush()
+            current.append(line)
+            if URL_RE.search(line):
+                flush()
+            continue
+        if URL_RE.search(line):
+            if current:
+                current.append(line)
+                flush()
+            else:
+                blocks.append([line])
+            continue
+        if current:
+            current.append(line)
+    flush()
+    return blocks
+
+
 def collect_citations(run_dir: Path) -> list[dict]:
+    """Pair each cited URL with the figures of the list item it belongs to.
+
+    Research logs often put the claim on one line and its URL on the next, so figures are
+    gathered per list item: a numbered or bulleted line plus its continuation lines.
+    """
     conv = json.loads((run_dir / "conversation.json").read_text(encoding="utf-8"))
     cites = []
     for t in conv:
         for item in t["items"]:
             if item["kind"] != "text":
                 continue
-            for line in item["text"].splitlines():
-                for url in URL_RE.findall(line):
-                    cites.append({"turn": t["turn"], "url": url.rstrip(".,;:"), "line": line.strip()[:400],
-                                  "figures": figures_in(line)})
+            for block in citation_blocks(item["text"]):
+                text = " ".join(part.strip() for part in block)
+                for url in URL_RE.findall(text):
+                    cites.append({"turn": t["turn"], "url": url.rstrip(".,;:"), "line": text[:400],
+                                  "figures": figures_in(text)})
     return cites
 
 
@@ -127,7 +200,9 @@ def verify_run(run_dir: Path) -> dict:
     results = []
     for c in cites:
         status, text = fetch_text(c["url"])
-        found = [{"figure": f["figure"], "found": bool(re.search(f["pattern"], text, re.I))} for f in c["figures"]] if text else []
+        found = [{"figure": f["figure"],
+                  "found": bool(re.search(f["pattern"], text, re.I)) if text else None}
+                 for f in c["figures"]]
         if not text:
             verdict = status
         elif not c["figures"]:
@@ -152,7 +227,16 @@ def main() -> None:
     ap = argparse.ArgumentParser(description="Verify cited figures against raw source pages.")
     ap.add_argument("--iteration", type=Path)
     ap.add_argument("--run", type=Path)
+    ap.add_argument("--page-texts", type=Path,
+                    help="JSON {url: text} read in a real browser, for sites that refuse scripted fetches")
     args = ap.parse_args()
+    if args.page_texts:
+        texts = json.loads(args.page_texts.read_text(encoding="utf-8"))
+        if isinstance(texts, str):  # browser_evaluate saves the JSON string itself
+            texts = json.loads(texts)
+        for url, text in texts.items():
+            if text and text.strip():
+                _cache[url] = ("ok (browser)", text)
     if args.iteration:
         runs = [p for p in sorted(args.iteration.glob("eval-*/*/run-*")) if (p / "conversation.json").exists()]
     elif args.run:

@@ -299,7 +299,7 @@ def run_one(base, ev, config, run_no, skill_dir: Path, run_dir: Path) -> str:
         if not nxt:
             status = f"simulated user returned nothing on turn {turn}"
             break
-        if nxt.startswith(END):
+        if END in nxt:  # the simulated user sometimes appends the marker to a closing line
             status = "completed"
             break
         message = nxt

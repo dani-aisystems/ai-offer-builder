@@ -294,7 +294,7 @@ def check_run(run_dir: Path, eval_id: int, persona: str) -> dict:
             r"(placeholder|fallback|default|neutral|generic)[^.\n]{0,80}(identity|brand|branding|look|palette|agency|name|colou?rs?)"
             r"|(identity|brand|branding|agency name)[^.\n]{0,80}(placeholder|fallback|default|neutral|generic)", chat, re.I))
     if eval_id == 1:
-        out["asked_language"] = asked_before_reveal(conv, facts["assistant_by_turn"], r"polish|polsk", r"language|język|jezyk")
+        out["asked_language"] = asked_before_reveal(conv, facts["assistant_by_turn"], r"polish|polsk", r"language|język|jezyk|polish|polsk")
         out["asked_currency"] = asked_before_reveal(conv, facts["assistant_by_turn"], r"\bPLN\b|zł|złot", r"currency|waluta|PLN|zł")
     if spec.get("automation"):
         out["automation"] = {

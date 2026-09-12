@@ -30,9 +30,23 @@ window.__probeSlide = function (opts) {
     if (opts.desktop) out.issues.push(`needs scrolling on desktop: content ${sh}px in a ${ch}px slide`);
     else if (!['auto', 'scroll'].includes(oy)) out.issues.push(`content clipped: ${sh}px in a ${ch}px slide (overflow-y:${oy})`);
   }
+  // Content pushed above the slide's top edge can't be scrolled to (e.g. justify-content:center on an overflowing slide).
+  const slideTop = active.getBoundingClientRect().top;
+  if (active.scrollTop === 0) {
+    for (const el of active.querySelectorAll('*')) {
+      if (!visible(el) || !hasOwnText(el)) continue;
+      const r = el.getBoundingClientRect();
+      if (r.height > 0 && r.top < slideTop - 2 && !el.closest('[style*="position: fixed"]')) {
+        out.issues.push(`content cut off above the top edge: "${snippet(el)}"`);
+        break;
+      }
+    }
+  }
   for (const el of active.querySelectorAll('*')) {
     if (!visible(el) || !el.textContent.trim()) continue;
     const cs = getComputedStyle(el);
+    if (opts.desktop && ['auto', 'scroll'].includes(cs.overflowY) && el.clientHeight > 0 && el.scrollHeight > el.clientHeight + 2)
+      out.issues.push(`scrolling panel on desktop in <${el.tagName.toLowerCase()}.${String(el.className).split(' ')[0]}>: ${el.scrollHeight}px in ${el.clientHeight}px`);
     if (cs.overflowY === 'hidden' && el.clientHeight > 0 && el.scrollHeight > el.clientHeight + 2)
       out.issues.push(`clipped inside <${el.tagName.toLowerCase()}.${String(el.className).split(' ')[0]}>: ${el.scrollHeight}px in ${el.clientHeight}px`);
     if (cs.overflowX === 'hidden' && el.clientWidth > 0 && el.scrollWidth > el.clientWidth + 2)
@@ -72,15 +86,38 @@ window.__probeSlide = function (opts) {
       }
     }
   }
+  // Navigation overlap. A slide that scrolls (phones) passes content behind a fixed nav bar while
+  // scrolling, which is fine as long as the content can be scrolled clear of it, so a scrollable
+  // slide is checked at its end position; a slide that doesn't scroll is checked as shown.
   const navEls = Array.from(document.querySelectorAll('button, nav, [class*="counter"], [id*="counter"], [class*="nav"], [id*="nav"]'))
     .filter(el => !active.contains(el) && !el.contains(active) && visible(el));
+  const scrolls = sh > ch + 2 && ['auto', 'scroll'].includes(oy);
+  const lineBoxes = () => {
+    const found = [];
+    for (const el of textEls) {
+      const range = document.createRange();
+      for (const n of el.childNodes) {
+        if (n.nodeType !== 3 || !n.textContent.trim()) continue;
+        range.selectNodeContents(n);
+        for (const r of range.getClientRects()) if (r.width > 1 && r.height > 1) found.push({ el, r });
+      }
+    }
+    return found;
+  };
+  const savedScroll = active.scrollTop;
+  if (scrolls) active.scrollTop = active.scrollHeight;
+  const navLines = scrolls ? lineBoxes() : lines;
   for (const nav of navEls) {
     const n = nav.getBoundingClientRect();
-    for (const { el, r } of lines) {
+    for (const { el, r } of navLines) {
       const w = Math.min(n.right, r.right) - Math.max(n.left, r.left), h = Math.min(n.bottom, r.bottom) - Math.max(n.top, r.top);
-      if (w > 2 && h > 2 && r.top < vh && r.bottom > 0) { out.issues.push(`slide text under navigation: "${snippet(el)}"`); break; }
+      if (w > 2 && h > 2 && r.top < vh && r.bottom > 0) {
+        out.issues.push(scrolls ? `slide text stays under navigation at the end of scrolling: "${snippet(el)}"` : `slide text under navigation: "${snippet(el)}"`);
+        break;
+      }
     }
   }
+  if (scrolls) active.scrollTop = savedScroll;
   if (!opts.desktop && out.minFont && out.minFont.size < 12) out.issues.push(`text below 12px on phone: ${out.minFont.size}px "${out.minFont.text}"`);
 
   // 4. Contrast of every rendered text element against its effective background.
