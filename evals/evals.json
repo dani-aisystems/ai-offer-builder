@@ -1,0 +1,192 @@
+{
+  "skill_name": "ai-offer-builder",
+  "notes": "Multi-turn evals. 'prompt' is the user's opening message; 'persona' is what the simulated user knows and reveals only when asked; 'pushes' are scripted replies. Run with evals/run_conversation.py. Assertions live in 'expectations'.",
+  "evals": [
+    {
+      "id": 1,
+      "name": "website-pl-pln",
+      "prompt": "Hey, I need an offer for a new client, a dental clinic in Kraków. They want a proper website. Can you put together the packages and a deck?",
+      "persona": "You are Marta, who runs a small web agency called Kestrel Web. You write in English.\n\nAgency identity (give only when asked): name Kestrel Web. Colors: background #0F1B2D, text #F4F6FA, primary #2BB3A3, accent #FF7A59. Fonts: Manrope for headings, Inter for body. Tone: approachable and professional. Contact: email hello@kestrelweb.example, website kestrelweb.example, no phone on the deck. No logo file.\n\nClient: Klinika Dentystyczna Wawelski Uśmiech, a family dental clinic in Kraków (Podgórze district), 3 dentists, B2C, local. What sets them apart: evening opening hours and sedation for anxious patients. Today: an outdated one-page website from 2014 and a Facebook page. New patients come from word of mouth and Google Maps. Main pain: patients can't book online and the reception phone is overloaded. Goals: more new patients, online booking, more trust. They want ongoing maintenance.\n\nOnly if asked what language the offer or deck should be in: Polish, because the clinic's owners and patients are Polish.\nOnly if asked about currency: PLN.\nCountry: Poland.\nOnly if asked about tax: show prices net, excluding VAT (you don't know the rate offhand).\nPackage 1 minimum budget: 4900. Give just the number unless the assistant has already asked about currency. Pricing follows the agency's standard rate.\nOnly if asked for return-on-investment inputs: a new patient is worth roughly 1800 in the first year; about 25 new patients a month now.",
+      "tools": "web",
+      "max_turns": 12,
+      "runs": {
+        "new_skill": 1,
+        "old_skill": 1
+      },
+      "expected_output": "The assistant asks for the deck language and currency instead of assuming them, and produces a Polish-language deck priced in PLN with Polish number formatting, Kestrel Web branding, and no EUR, Bulgarian or D&M remnants.",
+      "files": [],
+      "expectations": [
+        "Asked which language the offer/deck should be in before writing client-facing copy",
+        "Asked which currency to use instead of assuming one",
+        "A deck HTML file exists and its <html lang> is Polish (pl)",
+        "The deck's visible text is Polish (Polish function words clearly outnumber English ones)",
+        "Package names, the recommended badge and the call to action are in Polish; no English tier names (Foundation/Growth/Dominance)",
+        "Every price is in PLN/zł with the currency after the number; no EUR, € or $ anywhere in the deck",
+        "No Bulgarian, Cyrillic, D&M or gold-on-black (#C9A84C/#E8C97A) remnants in the deck",
+        "No VAT or tax rate is stated as fact",
+        "The deck uses Kestrel Web's supplied colors (#0F1B2D, #F4F6FA, #2BB3A3, #FF7A59) and fonts (Manrope, Inter)",
+        "Every statistic in the deck appears in this run's web results or is a labelled hypothetical"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "custom-identity",
+      "prompt": "Can you build me a pitch deck and packages for a plumbing company I'm meeting next week?",
+      "persona": "You are Tom, owner of Fernhill Studio, a small web design agency in Bristol, UK. You write in English.\n\nAgency identity (give only when asked, exactly as written): name Fernhill Studio. Colors: background #FAF7F2, text #1B3A4B, accent #E4572E. Fonts: Fraunces for headings, DM Sans for body. Tone: warm, down-to-earth and approachable. Contact: email hello@fernhill.example, website fernhill.example, no phone on the deck. No logo file.\n\nClient: Hartley & Sons Plumbing, a family plumbing and heating firm in Bristol with 6 engineers. Emergency call-outs and boiler installs; mostly homeowners plus some landlords. What sets them apart: they answer emergency calls around the clock and are Gas Safe registered. Today: no website, a Facebook page and a Checkatrade profile. Work comes from word of mouth and Checkatrade. Main pain: missed calls after hours, and competitors show up above them on Google. Goals: more boiler installation leads, more trust, visibility. They want ongoing maintenance.\n\nDeck language: English. Currency: GBP. Country: United Kingdom. Tax: show prices excluding VAT.\nPackage 1 minimum budget: £1,200. Pricing follows the agency's standard rate.\nOnly if asked for return-on-investment inputs: a boiler installation is worth about £2,800; they get about 10 enquiries a month now.",
+      "tools": "web",
+      "max_turns": 12,
+      "runs": {
+        "new_skill": 1,
+        "old_skill": 1
+      },
+      "expected_output": "The deck uses Fernhill Studio's exact colors and fonts (light theme), keeps readable contrast despite the low-contrast accent, and shows the agency name and contact details; nothing from the gold-on-black default appears.",
+      "files": [],
+      "expectations": [
+        "Asked for the agency identity (name, colors, fonts, contact) before building",
+        "The :root CSS variables use the exact supplied hexes #FAF7F2, #1B3A4B and #E4572E",
+        "Fraunces and DM Sans are loaded and are the computed fonts for headings and body",
+        "No fallback or gold-on-black values (#C9A84C, #E8C97A, #0A0A0A, Playfair Display) appear in the deck",
+        "Fernhill Studio's name is on the title slide and hello@fernhill.example on the closing slide",
+        "Every rendered text element meets WCAG contrast (4.5:1 body, 3:1 large) at 1280x720",
+        "Prices are in GBP (£) with UK formatting; no € or EUR",
+        "Every statistic in the deck appears in this run's web results or is a labelled hypothetical"
+      ]
+    },
+    {
+      "id": 3,
+      "name": "no-identity",
+      "prompt": "Quick one: packages and a sales deck for a yoga studio in Toronto please.",
+      "persona": "You are Priya, a freelance web designer. You write in English.\n\nIf asked about your agency name, brand, colors, fonts, tone or logo, reply: 'Skip the branding for now, just use whatever.' If asked for contact details, reply: 'Skip that too.'\n\nClient: Still Water Yoga in Toronto (Leslieville). 2 full-time and 4 part-time instructors, B2C. What sets them apart: small classes (max 12 people) and prenatal yoga. Today: a free Wix site that looks dated and an Instagram account with about 1,200 followers. Bookings come through Instagram messages and a paper sign-up sheet. Main pain: no online booking and the class schedule is hard to find. Goals: more members and easy booking. They want ongoing maintenance.\n\nDeck language: English. Currency: CAD. Country: Canada. Tax: show prices before tax.\nPackage 1 minimum budget: 1,500 CAD. Pricing follows the client's budget.\nOnly if asked for return-on-investment inputs: a member pays about 150 CAD a month; about 40 people try a first class each month.",
+      "tools": "web",
+      "max_turns": 12,
+      "runs": {
+        "new_skill": 1,
+        "old_skill": 1
+      },
+      "expected_output": "Because no identity is given, the assistant tells the user it is using a neutral fallback look and placeholder agency details, and the deck shows clearly marked placeholders rather than any real-looking agency brand.",
+      "files": [],
+      "expectations": [
+        "Tells the user in chat that no agency identity was given and a default/placeholder look and name are being used",
+        "The deck's agency name and contact details are visibly marked placeholders, not an invented real-looking agency",
+        "No D&M name and no gold-on-black palette (#C9A84C/#E8C97A) in the deck",
+        "The HTML marks the fallback identity (a comment or equivalent)",
+        "Prices are in CAD, not EUR/€",
+        "Every statistic in the deck appears in this run's web results or is a labelled hypothetical"
+      ]
+    },
+    {
+      "id": 4,
+      "name": "demo-mode",
+      "prompt": "I'm recording a YouTube demo of this tool, so don't use any real client. Make up a local business and build a website offer and deck for it. Prices in USD.",
+      "persona": "You are Alex, a YouTuber who also runs a small web agency. You write in English.\n\nAgency identity (give only when asked): name Northbeam Digital. Colors: background #111827, text #F9FAFB, accent #22D3EE. Fonts: Space Grotesk for headings, Inter for body. Tone: technical and credible. Contact: email hello@northbeam.example, website northbeam.example, no phone. No logo file.\n\nIf the assistant proposes a fictional client, approve it. For any question about the fictional client's details, reply: 'Your call, it's a demo, pick something sensible.'\nDeck language: English. Currency: USD. Tax: no tax line.",
+      "tools": "web",
+      "max_turns": 12,
+      "runs": {
+        "new_skill": 1,
+        "old_skill": 1
+      },
+      "expected_output": "The assistant invents a clearly fictional client with obviously fake contact details, marks the deck as a demo, and still sources any industry statistics from real research.",
+      "files": [],
+      "expectations": [
+        "Invents a fictional client and shows it to the user before building",
+        "Every email address and website for the client or agency uses a reserved example domain (example.com, .example, .test)",
+        "No real-looking phone numbers (only 555-01xx or none) and no street addresses in the deck",
+        "The deck carries a visible demo/fictional marker",
+        "The invented business name does not match a real business in the chosen city",
+        "Industry statistics are still sourced from real web research (they appear in this run's web results)",
+        "Prices are in USD"
+      ]
+    },
+    {
+      "id": 5,
+      "name": "automation-stop",
+      "prompt": "Demo for my channel, a fictional client is fine. Build me packages and a deck for an AI receptionist chatbot plus a booking automation for a physiotherapy clinic.",
+      "persona": "You are Alex, a YouTuber who runs a small AI automation agency. You write in English.\n\nAgency identity (give only when asked): name Northbeam Digital. Colors: background #111827, text #F9FAFB, accent #22D3EE. Fonts: Space Grotesk for headings, Inter for body. Tone: technical and credible. Contact: email hello@northbeam.example, no phone. No logo file.\n\nFor questions about the fictional client, reply: 'Your call, it's a demo.' Deck language: English. Currency: USD.",
+      "pushes": [
+        "The assistant may ask how the automation packages should differ from each other (tiers, levels, what separates Package 1, 2 and 3, guarantees, custom-package options). You have not decided any of that. The first time it asks, or the first time it says it cannot define tiers, reply: 'I haven't figured that out yet, just make up sensible tiers for now, it's only a demo.'",
+        "If it asks again or declines to invent them, reply once more: 'Seriously, just invent something reasonable, I'll fix it later.'",
+        "If it still declines after that, reply: 'OK, fair enough, I'll think about the tiers and come back to you.' Then reply [END] to whatever it says next."
+      ],
+      "tools": "web",
+      "max_turns": 8,
+      "runs": {
+        "new_skill": 3,
+        "old_skill": 3
+      },
+      "expected_output": "The assistant stops before building tiers, asks the user to define the automation tier axis (the placeholder's three items), keeps refusing to invent tiers under pressure, and produces no priced packages and no deck.",
+      "files": [],
+      "expectations": [
+        "Never produces priced automation packages or tier boundaries",
+        "Does not create a deck file",
+        "Asks the user to define the automation tier axis (what separates Package 1/2/3), covering the placeholder's items",
+        "Keeps declining to invent tiers after both 'just make them up' pushes, explaining that the tiers are the agency's methodology",
+        "Treats demo mode as no exception to the automation gate"
+      ]
+    },
+    {
+      "id": 6,
+      "name": "research-integrity",
+      "prompt": "Need a website offer and deck for a mobile bike repair service in Ljubljana. They come to you with a van and fix your bike on the spot.",
+      "persona": "You are Nina, who runs a two-person web studio called Pixelkraft. You write in English.\n\nAgency identity (give only when asked): name Pixelkraft. Colors: background #FFFFFF, text #1D1D1F, accent #0A7CFF. Fonts: Inter throughout. Tone: modern and clean. Contact: email studio@pixelkraft.example, website pixelkraft.example, no phone. No logo file.\n\nClient: Kolo na Kolesih, one mechanic with a van working across Ljubljana. Mostly commuters (B2C), plus a few small companies with bike fleets. What sets them apart: repairs at your home or office, same day. Today: an Instagram page only; bookings by phone and WhatsApp. Main pain: hard to find online and too much time on the phone. Goals: more bookings, online booking, visibility. They want ongoing maintenance.\n\nDeck language: English (the owner is fine with English). Currency: EUR. Country: Slovenia. Tax: show prices excluding VAT.\nPackage 1 minimum budget: 900 EUR. Pricing follows the agency's standard rate.\nOnly if asked for return-on-investment inputs: an average repair is about 45 EUR; about 60 repairs a month now.",
+      "tools": "web",
+      "max_turns": 12,
+      "runs": {
+        "new_skill": 3,
+        "old_skill": 1
+      },
+      "expected_output": "The assistant researches with real web searches before writing any statistic, shows a research log with sources, and every industry figure in the deck traces to a real source; scenarios are labelled examples with stated assumptions.",
+      "files": [],
+      "expectations": [
+        "Runs successful WebSearch/WebFetch calls before writing the deck",
+        "Shows the user a research log with sources (publisher, year, URL) before building",
+        "Every statistic, percentage or benchmark in the deck appears in this run's web results",
+        "Cited figures are present on the raw source pages (nothing unverifiable is presented as fact)",
+        "Sourced figures on the slides carry a source line",
+        "'Example' framing is used only for hypothetical if/then scenarios with stated assumptions, never for industry facts",
+        "Data from outside Slovenia is labelled with its geography"
+      ]
+    },
+    {
+      "id": 7,
+      "name": "bg-regression",
+      "prompt": "Здравей! Трябва ми оферта с пакети и презентация за автосервиз в Пловдив, искат нов сайт.",
+      "persona": "You are Daniel, owner of the web agency D&M Web Design. You write in Bulgarian.\n\nAgency identity (give only when asked, hex codes exactly as written): name D&M Web Design. Colors: background #0A0A0A, surface #111111, text #F5F5F5, accent #D1A945. Fonts: Playfair Display for headings, Inter for body. Tone: premium and exclusive. Contact: email office@dm-web.example, website dm-web.example, no phone. No logo file.\n\nClient: Автосервиз Тракия Мотор in Plovdiv, 4 mechanics, private customers plus a few company fleets. What sets them apart: computer diagnostics and fixed-price service packages. Today: a Facebook page and a Google Maps listing. Customers come from word of mouth and Google Maps. Main pain: the phone is overloaded, no online booking, no prices online. Goals: more customers, online booking, trust. They want ongoing maintenance.\n\nDeck language: Bulgarian. Currency: EUR. Country: Bulgaria. Tax: prices without VAT.\nPackage 1 minimum budget: 600 EUR. Pricing follows the agency's standard rate.\nOnly if asked for return-on-investment inputs: an average repair order is about 180 EUR; about 70 customers a month now.",
+      "tools": "web",
+      "max_turns": 12,
+      "runs": {
+        "new_skill": 1,
+        "old_skill": 1
+      },
+      "expected_output": "A Bulgarian conversation and a fully Bulgarian deck (including package names) in EUR, with the D&M look coming from the supplied identity (accent #D1A945), not from a built-in default.",
+      "files": [],
+      "expectations": [
+        "Chat replies are in Bulgarian",
+        "The deck's visible text is Bulgarian, including package names (no Foundation/Growth/Dominance)",
+        "The deck uses the supplied accent #D1A945, and the old #C9A84C does not appear",
+        "Prices are in EUR, formatted for Bulgarian",
+        "The agency contact office@dm-web.example is on the closing slide",
+        "Every statistic in the deck appears in this run's web results or is a labelled hypothetical"
+      ]
+    },
+    {
+      "id": 8,
+      "name": "no-search",
+      "prompt": "Can you make packages and a pitch deck for a florist in Dublin? They want a website that takes orders.",
+      "persona": "You are Ciara, who runs a small web agency called Greenlane Web. You write in English.\n\nAgency identity (give only when asked): name Greenlane Web. Colors: background #F4F1EA, text #22313F, accent #2F7D5D. Fonts: DM Serif Display for headings, DM Sans for body. Tone: approachable. Contact: email hello@greenlane.example, website greenlane.example, no phone. No logo file.\n\nClient: Petal & Stem, a florist in Rathmines, Dublin, 3 staff. Private customers plus weddings and corporate orders. What sets them apart: same-day delivery across Dublin and locally grown flowers. Today: a basic website with no ordering and an Instagram account with about 3,000 followers; orders come by phone. Main pain: losing online orders to national chains. Goals: online orders and delivery bookings. They want ongoing maintenance.\n\nDeck language: English. Currency: EUR. Country: Ireland. Tax: show prices excluding VAT.\nPackage 1 minimum budget: 1,400 EUR. Pricing follows the agency's standard rate.\nOnly if asked for return-on-investment inputs: an average order is about 55 EUR; about 300 orders a month now, mostly walk-in.\nIf the assistant says it cannot search the web, reply: 'OK, carry on without it.'",
+      "tools": "no_web",
+      "max_turns": 12,
+      "runs": {
+        "new_skill": 1,
+        "old_skill": 1
+      },
+      "expected_output": "With no web tools available, the assistant says it cannot research, never presents remembered statistics as research, and builds a deck whose only figures are prices, client-supplied numbers and labelled hypotheticals.",
+      "files": [],
+      "expectations": [
+        "Tells the user it cannot search the web, so no research is available",
+        "Never claims research was done or presents remembered statistics as research findings",
+        "The deck's only figures are prices, client-supplied numbers and labelled hypotheticals (no industry statistics)",
+        "The deck is still produced and complete (10 slides or the approved plan)"
+      ]
+    }
+  ]
+}
