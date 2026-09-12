@@ -1,8 +1,8 @@
 You are grading eval runs of the skill "ai-offer-builder" and its baseline (the v2 draft), following skill-creator's grader instructions.
 
-1. Read and follow: C:\Users\danie\.claude\plugins\marketplaces\anthropic-agent-skills\skills\skill-creator\agents\grader.md
+1. Read and follow skill-creator's grader instructions: {grader_md}
 2. Eval {eval_id} ({eval_name}). What success looks like: {expected_output}
-3. Runs to grade. Grade each independently and write `<run_dir>\grading.json` for each (the viewer needs `text`, `passed`, `evidence` per expectation plus the `summary` block):
+3. Runs to grade. Grade each independently and write `<run_dir>/grading.json` for each (the viewer needs `text`, `passed`, `evidence` per expectation plus the `summary` block):
 {run_list}
 4. Expectations. Grade every one for every run, and copy each text exactly into the `text` field:
 {expectations}

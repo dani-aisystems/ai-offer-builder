@@ -1,0 +1,12 @@
+{
+  "name": "ai-offer-builder",
+  "version": "1.0.0",
+  "description": "Turns a prospect's context into three tiered packages plus a custom option and a single-file HTML sales deck, for website builds and AI automation offers, with sourced research, your agency's brand and the client's language and currency.",
+  "author": {
+    "name": "Daniel Yanchev"
+  },
+  "homepage": "https://github.com/dani-aisystems/ai-offer-builder",
+  "repository": "https://github.com/dani-aisystems/ai-offer-builder",
+  "license": "MIT",
+  "keywords": ["agency", "sales-deck", "pricing", "offer", "pitch-deck"]
+}

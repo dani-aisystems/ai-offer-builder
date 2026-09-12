@@ -1,0 +1,14 @@
+{
+  "name": "dani-aisystems",
+  "description": "Claude skills for agencies selling websites and AI automation.",
+  "owner": {
+    "name": "Daniel Yanchev"
+  },
+  "plugins": [
+    {
+      "name": "ai-offer-builder",
+      "source": "./",
+      "description": "Turns a prospect's context into three tiered packages plus a custom option and a single-file HTML sales deck, for website builds and AI automation offers."
+    }
+  ]
+}
