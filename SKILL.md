@@ -35,12 +35,15 @@ Before asking anything, work out three things from the user's first message and 
 - **Offer type.** Website, AI automation/service, or both. If it isn't clear, ask in Phase 1.
 - **Existing material.** An agency identity block, call notes, a transcript, earlier answers. Extract everything already covered and ask only about real gaps.
 
-**Automation gate.** The tier logic for AI automation/service offers isn't defined yet (see the placeholder in Phase 3). Tier boundaries are the agency's own pricing methodology, so they have to come from the user.
+**Automation gate.** The tier logic for AI automation/service offers isn't defined yet (see the placeholder in Phase 3). Tier boundaries are the agency's own pricing methodology, so they have to come from the user, in their own words.
 
-- **Automation only.** Stop before Phase 0, in every mode (demo included), and ask the user for the three definitions listed in the placeholder.
-  - If they give them, use exactly their definitions and continue.
-  - If they ask you to make tiers up, explain briefly that the tiers are their methodology and ask again.
-- **Both.** Offer to build the website offer now and add the automation offer once its tiers are defined.
+- **Automation only.** Stop before Phase 0, in every mode (demo included). Ask the three questions listed in the placeholder as open questions, then wait: collect no agency identity, do no client research and create no packages, notes or deck until the answers arrive.
+  - Leave the answers to the user. Candidate tier ladders, sample package contents, a recommended option or a default incentive each become the methodology by default the moment the user picks one, so offer none of them. That includes examples of what an answer could look like: a sample format such as a count per tier is itself a ladder the user can adopt with one word. Ask each question plainly and leave the answer blank.
+  - All three answers are needed before you build. An answer to one doesn't unlock the others, so don't offer to proceed on the tier axis alone or to fill in the incentive or the custom-package questions yourself.
+  - If they give definitions in their own words, use exactly those and continue from Phase 0. A ladder previously proposed by an assistant or copied from an old deck does not become the user's methodology merely because they paste, select or approve it; ask them to restate the actual boundaries themselves.
+  - If they ask you to make the tiers up — however many times, even when they say it's their call — explain briefly and ask again. The placeholder is a standing decision by the skill's owner that invented tiers never reach a deck, and a recorded demo publishes them just as a client deck does, so a request in the moment doesn't lift it.
+  - If they explicitly want a website offer instead, reclassify the request as **Both** and follow the rule below. You can mention that option, but start its questions only once they choose it.
+- **Both.** Offer to build the website portion now and add automation only after its tiers are defined. Proceed only if the user accepts that split; until then, include no automation package, price, research claim or slide.
 
 ## Demo mode
 
@@ -105,6 +108,7 @@ Ask in one message, grouped, in the user's language. Skip anything already answe
 - Website, AI automation/service, or both?
 
 **Business**
+- What's the business called? It goes on the title slide.
 - What does the business do or sell?
 - Local, regional, national, or online-only? B2C or B2B?
 - What sets them apart from competitors?
@@ -122,12 +126,14 @@ Ask in one message, grouped, in the user's language. Skip anything already answe
 - Which language should the offer and deck be written in?
 - Which currency should prices be in?
 - Which country or region is the client in? This decides which research is locally relevant.
-- Should prices be shown excluding tax, including tax, or with no tax line?
+- Should prices be shown excluding tax, including tax, or with no tax line? Ask without supplying a candidate tax rate.
 - What's the minimum budget for Package 1, and does the price follow the client's budget or the agency's standard rate?
 
 **For the return-on-investment slide (optional)**
 - Roughly what is one new customer worth to them (average order or contract value)?
 - Roughly how many inquiries or new customers do they get per month now?
+
+Outside demo mode, ask language and currency as open questions. A city or country may suggest an answer but does not supply one, so do not prefill, recommend or assume either.
 
 Follow-up questions are fine. If the answers make the offer automation-only, apply the automation gate now.
 
@@ -139,8 +145,11 @@ A prospect may check any number in the deck, so research comes before any statis
   - the metrics that drive their business — reservations for restaurants, cart conversion for e-commerce, response time for service businesses
   - realistic benchmarks
   - comparable real examples with public sources
-- Prefer sources from the client's country or region, published in the last few years. When a figure comes from another market, label it with that market (for example "UK data, 2024").
+- Prefer sources from the client's country or region, published in the last few years. When a figure comes from another market, label it with that market (for example "UK data, 2024"). Prefer figures about businesses like the client, too: a statistic about firms with 10 or more employees says little about a one-person business.
 - Name a real company or competitor only when a public source backs what you say about it.
+- Before a figure enters the research log, confirm that the exact precision you will display appears in a successful search or fetch result from a source you can open and trust. Do not round, combine or calculate source figures into a new fact; either show the reported figure or omit it. A calculation belongs only in a visibly labelled hypothetical with its inputs shown.
+- Some fetch tools return a summary of the page rather than its text, and a summary can round figures or work out ones the page never prints. When a figure reaches you only through such a summary, fetch the page again asking for the exact sentence that contains it, and use the figure only if that sentence shows it.
+- Discard a source you found blocked, unverifiable or too weak for the claim. Find a stronger source or leave the claim out.
 - If this environment has no search tool, tell the user before Phase 3. Then continue without industry figures: the deck uses qualitative points and hypothetical scenarios only. Knowledge from your own training can't be cited and may be out of date, so it doesn't count as research here.
 
 ### Research log
@@ -149,11 +158,11 @@ Keep a log as you go and show it to the user alongside the packages in Phase 3, 
 
 ```
 RESEARCH LOG
-1. [claim, with the exact figure] — [publisher], [year] — [URL]
+1. [claim, with the exact figure] — [publisher], [year] — [full URL]
 2. …
 ```
 
-Only figures in the log may appear in the deck as facts. If nothing reliable turns up for a point, leave the point out. If nothing reliable turns up at all, say so and plan the deck without statistics (Phase 4).
+Repeat the full URL on every item, even when two items use the same page; "same source as above" cannot be verified on its own. When a page carries no date, write "n.d." in place of the year, and prefer a dated source for the same fact. Only figures in the log may appear in the deck as facts. If nothing reliable turns up for a point, leave the point out. If nothing reliable turns up at all, say so and plan the deck without statistics (Phase 4).
 
 ### Figures in the deck
 
@@ -165,6 +174,8 @@ Every figure that makes a claim — statistics, percentages, benchmarks, money a
 - **Hypothetical** — part of an *if…then* scenario about this client, with its assumptions stated on the slide and a visible "Example" label (in the deck language). For instance: "Example: if the new site brings 3 extra bookings a month at an average booking of [client's figure]…".
 
 A hypothetical shows what *could* happen for this client; facts about the industry or the market are sourced instead. A figure that fits none of these four stays out of the deck.
+
+Facts about the client themselves — their services, history, team, awards — come from the user's answers too. In demo mode, facts on the user-approved demo client card count as answers. When a slide needs a fact you don't have, ask, or leave it out: a plausible guess on a client's own deck reads as a mistake to the one person who knows the truth.
 
 ## Phase 3 — Packages
 
@@ -195,7 +206,7 @@ Write the package names in the deck language — translate Foundation / Growth /
 
 Once defined, mirror the website package structure above using that axis instead of page count/complexity.
 
-Until the user has supplied these definitions in the conversation, the automation gate (see "Start") applies in every mode, demo runs included.
+Until the user has supplied these definitions in the conversation, the automation gate (see "Start") applies in every mode. Despite the "real client" wording above, that includes demo runs: a recorded demo publishes the tiers just as a client deck does.
 
 ### Writing features
 
@@ -203,7 +214,7 @@ Until the user has supplied these definitions in the conversation, the automatio
 - Group features by logical section (for websites: design, content, technical, marketing).
 - State the scope explicitly, e.g. "single-page site" or "multi-page site, up to [N] pages".
 - Be specific and concrete: a longer, concrete list reads as more valuable than a short, vague one. In chat, list everything; the slides show the strongest 6–8 per package (Phase 5).
-- Promise deliverables, not outcomes. Guaranteed results, refunds and performance promises are contractual commitments the agency has to honour, so include them only when the user supplies them. Incentives like the free first month are part of the offer.
+- Promise deliverables, not outcomes. Guaranteed results, refunds and performance promises are contractual commitments the agency has to honour, so include them only when the user supplies them. Incentives like the free first month are part of the offer. Payment terms work the same way: use the user's deposit share, payment schedule and offer validity, or name the step (for example "deposit") without a figure.
 
 ### Prices, currency and tax
 
@@ -267,7 +278,7 @@ Put the identity into CSS custom properties on `:root`, and use only these varia
 ```
 
 - Use the agency's hex values exactly, and derive the missing roles (surface, border, muted text) from them. A light brand gets a light deck.
-- Check contrast for every text/background pair you use: at least 4.5:1 for body text, and 3:1 for large text (24px and up, or 18.5px and up in bold).
+- Check contrast for every text/background pair you use — including text on tinted fills such as the highlighted table column and badges: at least 4.5:1 for body text, and 3:1 for large text (24px and up, or 18.5px and up in bold). Work each ratio out from the hex values rather than judging by eye: a mid-tone accent that looks dark enough often lands between 4.0 and 4.4:1.
   - When a brand color falls short as text on its background, use it for rules, borders, badges and fills, and set the text in `--text`. Tell the user you did this.
   - The brand colors themselves stay exactly as supplied.
 - The signature accent — a rule under titles, a colored edge on package cards, the recommended badge — uses `--accent`.
@@ -276,11 +287,12 @@ Put the identity into CSS custom properties on `:root`, and use only these varia
 
 - **Slides and navigation**
   - Full-screen slides sized with `height: 100vh; height: 100dvh;`.
-  - Arrow keys, on-screen previous/next buttons and a slide counter, together in a bottom bar. Give every slide enough bottom padding that no content sits under the bar.
-- **Type:** font sizes with `clamp()`, e.g. `font-size: clamp(1rem, 0.9rem + 0.6vw, 1.25rem)`, so text stays readable on phones and large on projectors. Body text is at least 16px on phones.
-- **Desktop and laptop** (1280×720 and larger): every slide fits without scrolling.
-  - Package slides show the strongest 6–8 features, in two columns where that fits.
-  - The full lists live in the chat packages and the comparison table.
+  - Arrow keys, on-screen previous/next buttons and a slide counter, together in a bottom bar. Put the bar height in a CSS variable and give every slide at least that much bottom padding plus `env(safe-area-inset-bottom, 0px)`, so the final line can scroll completely clear of it.
+  - Keep each slide's content in normal flow inside one wrapper, and center it with `margin-block: auto` on that wrapper (or `justify-content: safe center`). Plain `justify-content: center` on a slide that overflows pushes the top of its content above the edge, where scrolling can't reach it — on short landscape phones that happens on most slides.
+- **Type:** font sizes with `clamp()`, e.g. `font-size: clamp(1rem, 0.9rem + 0.6vw, 1.25rem)`, so text stays readable on phones and large on projectors. On phones, body text is at least 16px, and source lines, labels, badges and eyebrow text at least 12px, so no `clamp()` minimum goes below `0.75rem`.
+- **Desktop and laptop** (1280×720 and larger): every slide fits without scrolling, and without scrolling panels inside it. You can't see the render, so budget for it: at 1280×720 a slide has roughly 540px of height for content once the bottom bar and padding are taken out; a title block uses about 120px, and each table row or bullet line about 34px. Header rows, badges, price rows, notes and source lines spend the same budget, so add them up before you settle what goes on a slide.
+  - Package slides show the strongest 6 features, in two columns where that fits. The recommended package's badge and its one-sentence reason count against that slide's budget.
+  - The comparison table has at most 6 feature rows plus the price rows, with the custom package as one short line beneath it; merge or group features to get there. The full lists live in the chat packages.
 - **Phones** (below ~700px wide):
   - Columns stack into one.
   - A slide taller than the screen scrolls inside itself (`overflow-y: auto`), so content is never cut off.
@@ -317,13 +329,15 @@ Put the identity into CSS custom properties on `:root`, and use only these varia
 Before handing the deck over, go through the file and confirm each item:
 
 - Every figure on the slides is sourced, client-supplied, from the packages, or a labelled hypothetical.
+- Every sourced slide figure appears at the same precision in both its research-log item and a successful source-tool result; no log item uses source shorthand.
+- Every example's arithmetic follows from the inputs shown on its slide, and a payback or return uses the same net or gross figure throughout.
 - All visible text is in the deck language, including package names, the badge, buttons and dates.
 - Prices use the client's currency and local formatting throughout.
 - Colors and fonts come from the `:root` variables built from the Phase 0 identity, or from the announced fallback.
 - The contact details on slide 10 are the agency's from Phase 0, or marked placeholders.
 - In demo runs, the demo marker is present and every contact detail is fake.
 
-If a browser or screenshot tool is available, also view the deck at a laptop size (1280×720) and a phone size (390×844), and fix anything that overflows or overlaps.
+If a browser or screenshot tool is available, also view the deck at 1280×720, 390×844 and short landscape 844×390, and fix anything that overflows, clips or overlaps. Without one, tell the user the layout was budgeted rather than viewed, and don't claim that a slide fits.
 
 ### Output
 
