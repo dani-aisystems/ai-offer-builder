@@ -93,8 +93,8 @@ def fetch_text(url: str) -> tuple[str, str]:
 
 def figure_pattern(number: str, unit: str | None) -> str:
     digits = re.sub(r"[\s  ]", "", number)
-    if re.fullmatch(r"\d{1,3}(?:[,.]\d{3})+", digits):
-        groups = re.split(r"[,.]", digits)
+    if re.fullmatch(r"\d{1,3}(?:[,.\s]\d{3})+", number.strip()):  # 2,217,091 / 2.217.091 / 2 217 091
+        groups = re.split(r"[,.\s]", number.strip())
         core = r"[,.\s  ]?".join(groups)
     elif re.fullmatch(r"\d+[.,]\d+", digits):
         a, b = re.split(r"[.,]", digits)
