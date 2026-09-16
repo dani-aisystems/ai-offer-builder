@@ -3,3 +3,8 @@
 __pycache__/
 # Helper skills installed for this project; third-party licenses (pptx forbids redistribution)
 .claude/
+.DS_Store
+.claude/settings.local.json
+.env
+.env.local
+node_modules/

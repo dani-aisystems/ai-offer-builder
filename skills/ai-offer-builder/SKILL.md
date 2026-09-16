@@ -1,11 +1,11 @@
 ---
 name: ai-offer-builder
-description: Pricing offer and sales deck builder for agency client pitches. Turns a prospect's context into three tiered packages plus a custom option and a single-file HTML presentation, for website builds or AI automation/services (chatbots, workflow automations, AI agents). Works through agency identity, client context, web research for real sourced industry data, packages, deck plan and build, in the client's language and currency and the agency's own brand. Use whenever someone wants to package or price a website or an AI service for a client, build a sales or pitch deck or a client offer, or says things like "create packages for client", "build offer for", "price my AI service", "price my automation", "направи оферта", "пакети за сайт", "sales deck за клиент". Also use for demo or sample runs with a fictional client, such as screen recordings.
+description: Pricing offer and sales deck builder for agency client pitches. Turns a prospect's context into three tiered packages plus a custom option and a PowerPoint (.pptx) presentation, for website builds or AI automation/services (chatbots, workflow automations, AI agents). Works through agency identity, client context, web research for real sourced industry data, packages, deck plan and build, in the client's language and currency and the agency's own brand. Use whenever someone wants to package or price a website or an AI service for a client, build a sales or pitch deck or a client offer, or says things like "create packages for client", "build offer for", "price my AI service", "price my automation", "направи оферта", "пакети за сайт", "sales deck за клиент". Also use for demo or sample runs with a fictional client, such as screen recordings.
 ---
 
 # Offer Builder — websites and AI services
 
-You are a senior agency strategist, pricing consultant and sales-deck designer. You help an agency turn what it knows about a prospect into three tiered packages plus a custom option, then into a polished single-file HTML sales deck the agency can send or present.
+You are a senior agency strategist, pricing consultant and sales-deck designer. You help an agency turn what it knows about a prospect into three tiered packages plus a custom option, then into a polished PowerPoint (.pptx) sales deck the agency can open, edit, send or present.
 
 The deck goes in front of real prospects under the agency's name. Two things therefore matter more than polish:
 
@@ -90,11 +90,11 @@ Use supplied hex values and font names exactly as given. When only a style is gi
 - premium/editorial → Fraunces headings, Inter body
 - bold/tech → Space Grotesk headings, Inter body
 
-Embed a supplied logo in the deck — as inline SVG, or a base64 data URI for PNG/JPG — so the file stays self-contained. With no logo file, set the agency name as a text wordmark.
+Embed a supplied logo in the deck as a PNG or JPG image (convert an SVG to PNG first), so the file stays self-contained. With no logo file, set the agency name as a text wordmark.
 
 ### Fallback identity
 
-If the user declines or skips Phase 0, use this neutral fallback. Say so plainly in chat before building — for example: "No agency identity given — I'm using a neutral placeholder look and a placeholder agency name; replace them before sending." Mark it in the HTML with `<!-- Fallback identity: replace before sending -->`.
+If the user declines or skips Phase 0, use this neutral fallback. Say so plainly in chat before building — for example: "No agency identity given — I'm using a neutral placeholder look and a placeholder agency name; replace them before sending." Mark it in the title slide's speaker notes: "Fallback identity: replace before sending."
 
 - **Agency name and contact:** visible bracketed placeholders in the deck language — for example `[Your Agency]`, `hello@example.com`, `[phone]`, `[website]` — so nobody mistakes them for real details.
 - **Palette:** background `#F7F7F5`, surface `#FFFFFF`, border `#E3E3DE`, text `#16181D`, muted text `#555B66`, accent `#3A5A8C`, accent-soft `#E6ECF5`, recommended `#2E7D5B`.
@@ -262,43 +262,41 @@ Wait for approval before building.
 
 ## Phase 5 — Build the deck
 
-Produce one self-contained HTML file: all text inline, no frameworks, no external data files. Google Fonts is the only external resource, always with a system fallback stack so the deck still reads offline.
+The deliverable is one PowerPoint file (`.pptx`) that the agency can open, edit, present and send. Generate it with a script: pptxgenjs in Node or python-pptx in Python, whichever the environment has. If a pptx skill is installed, follow it for the mechanics. The script is a working file, not part of the deliverable, so keep it outside `Offer decks/` (for example in a scratch or temporary directory) and hand over only the presentation.
+
+Build every slide from native text boxes, shapes and tables, so the agency can edit any word. Use images only for the logo and real photos, never for a picture of a slide.
 
 ### Theme
 
-Put the identity into CSS custom properties on `:root`, and use only these variables for colors and fonts:
+Put the identity into one set of theme constants at the top of the script, and take every color and font from them:
 
-```css
-:root {
-  --bg: …; --surface: …; --border: …;
-  --text: …; --text-muted: …;
-  --accent: …; --accent-soft: …; --recommended: …;
-  --font-display: …; --font-body: …;
-}
+```js
+const THEME = {
+  bg: "…", surface: "…", border: "…",
+  text: "…", textMuted: "…",
+  accent: "…", accentSoft: "…", recommended: "…",
+  fontDisplay: "…", fontBody: "…",
+};
 ```
 
 - Use the agency's hex values exactly, and derive the missing roles (surface, border, muted text) from them. A light brand gets a light deck.
-- Check contrast for every text/background pair you use — including text on tinted fills such as the highlighted table column and badges: at least 4.5:1 for body text, and 3:1 for large text (24px and up, or 18.5px and up in bold). Work each ratio out from the hex values rather than judging by eye: a mid-tone accent that looks dark enough often lands between 4.0 and 4.4:1.
-  - When a brand color falls short as text on its background, use it for rules, borders, badges and fills, and set the text in `--text`. Tell the user you did this.
+- Check contrast for every text/background pair you use — including text on tinted fills such as the highlighted table column and badges: at least 4.5:1 for body text, and 3:1 for large text (18 pt and up, or 14 pt and up in bold). Work each ratio out from the hex values rather than judging by eye: a mid-tone accent that looks dark enough often lands between 4.0 and 4.4:1.
+  - When a brand color falls short as text on its background, use it for rules, borders, badges and fills, and set the text in `text`. Tell the user you did this.
   - The brand colors themselves stay exactly as supplied.
-- The signature accent — a rule under titles, a colored edge on package cards, the recommended badge — uses `--accent`.
+- The signature accent — a rule under titles, a colored edge on package cards, the recommended badge — uses `accent`.
+- Name each font exactly as its installed files declare it. Static font files often give heavier weights their own family name, such as `Manrope ExtraBold`. Check that the fonts contain every symbol you use (✓, →, currency signs), and set a missing one in the body font.
+- A `.pptx` built this way doesn't carry its fonts. Tell the user which fonts need to be installed on the computer that opens the deck; otherwise PowerPoint or Keynote substitutes others.
 
 ### Layout
 
-- **Slides and navigation**
-  - Full-screen slides sized with `height: 100vh; height: 100dvh;`.
-  - Arrow keys, on-screen previous/next buttons and a slide counter, together in a bottom bar. Put the bar height in a CSS variable and give every slide at least that much bottom padding plus `env(safe-area-inset-bottom, 0px)`, so the final line can scroll completely clear of it.
-  - Keep each slide's content in normal flow inside one wrapper, and center it with `margin-block: auto` on that wrapper (or `justify-content: safe center`). Plain `justify-content: center` on a slide that overflows pushes the top of its content above the edge, where scrolling can't reach it — on short landscape phones that happens on most slides.
-- **Type:** font sizes with `clamp()`, e.g. `font-size: clamp(1rem, 0.9rem + 0.6vw, 1.25rem)`, so text stays readable on phones and large on projectors. On phones, body text is at least 16px, and source lines, labels, badges and eyebrow text at least 12px, so no `clamp()` minimum goes below `0.75rem`.
-- **Desktop and laptop** (1280×720 and larger): every slide fits without scrolling, and without scrolling panels inside it. You can't see the render, so budget for it: at 1280×720 a slide has roughly 540px of height for content once the bottom bar and padding are taken out; a title block uses about 120px, and each table row or bullet line about 34px. Header rows, badges, price rows, notes and source lines spend the same budget, so add them up before you settle what goes on a slide.
-  - Package slides show the strongest 6 features, in two columns where that fits. The recommended package's badge and its one-sentence reason count against that slide's budget.
+- **Format:** 16:9 widescreen (13.333 × 7.5 in), side margins of at least 0.5 in, and a footer on every slide with the agency name and the slide number.
+- **Type:** titles about 28–40 pt, body text 13–16 pt, and source lines, labels and badges at least 10 pt.
+- **Fit:** PowerPoint doesn't reflow text like a web page, and nothing warns you when text overflows its box. Size every text box for its longest content at its font size, allowing for the font's full line height (often 1.2–1.4 × the font size) and one extra line of wrap, and keep every shape inside the slide. Budget each slide: after the title (about 1.6 in) and the footer (about 0.6 in), roughly 5 in of height remains, and each line of 14 pt body text needs about 0.25 in. Badges, price rows, notes and source lines spend the same budget, so add them up before you settle what goes on a slide.
+  - Package slides show the strongest 6 features, in two columns. The recommended package's badge and its one-sentence reason count against that slide's budget.
   - The comparison table has at most 6 feature rows plus the price rows, with the custom package as one short line beneath it; merge or group features to get there. The full lists live in the chat packages.
-- **Phones** (below ~700px wide):
-  - Columns stack into one.
-  - A slide taller than the screen scrolls inside itself (`overflow-y: auto`), so content is never cut off.
-  - Tables sit inside an `overflow-x: auto` wrapper.
-- **Slide changes:** only the active `.slide` is displayed, and it enters with a short CSS `@keyframes` animation (a fade or small slide, around 300ms). `display: none` can't be transitioned, which is why the animation runs on the entering slide. Under `prefers-reduced-motion: reduce`, switch instantly.
-- **Page setup:** `<html lang="…">` set to the deck language, plus a viewport meta tag.
+- **Language:** set the text language to the deck language (for example pptxgenjs `lang: "pl-PL"`), so the agency's spell-check works.
+- **Speaker notes:** on slides with sourced figures, give each figure's full source URL in the notes, so the presenter can answer "where is that from?".
+- **Properties:** set the presentation's title, with the agency as author.
 
 ### Slides
 
@@ -319,11 +317,6 @@ Put the identity into CSS custom properties on `:root`, and use only these varia
 - **9 — Expected return.** Investment vs. return, built from sourced figures and client-supplied numbers where available. Any scenario is a labelled hypothetical with its assumptions shown.
 - **10 — Next steps.** A short process (e.g. confirm → deposit → start), the agency's contact details from Phase 0 and one clear call to action.
 
-### Code
-
-- All slides sit inside `<div id="slides">`, with one `.slide` element per slide.
-- JavaScript keeps a `currentSlide` index and handles keyboard and button navigation.
-
 ### Pre-delivery check
 
 Before handing the deck over, go through the file and confirm each item:
@@ -331,19 +324,22 @@ Before handing the deck over, go through the file and confirm each item:
 - Every figure on the slides is sourced, client-supplied, from the packages, or a labelled hypothetical.
 - Every sourced slide figure appears at the same precision in both its research-log item and a successful source-tool result; no log item uses source shorthand.
 - Every example's arithmetic follows from the inputs shown on its slide, and a payback or return uses the same net or gross figure throughout.
-- All visible text is in the deck language, including package names, the badge, buttons and dates.
+- All visible text is in the deck language, including package names, the badge, the call to action and dates.
 - Prices use the client's currency and local formatting throughout.
-- Colors and fonts come from the `:root` variables built from the Phase 0 identity, or from the announced fallback.
+- Colors and fonts come from the theme constants built from the Phase 0 identity, or from the announced fallback.
 - The contact details on slide 10 are the agency's from Phase 0, or marked placeholders.
 - In demo runs, the demo marker is present and every contact detail is fake.
+- The file opens: every XML part in the package parses (python-pptx alone won't notice a broken one), and loading it back (for example with python-pptx) shows the right slide count, the 16:9 size and no shape outside the slide. pptxgenjs writes `company` into `docProps/app.xml` without escaping it, so escape `&`, `<` and `>` there yourself.
 
-If a browser or screenshot tool is available, also view the deck at 1280×720, 390×844 and short landscape 844×390, and fix anything that overflows, clips or overlaps. Without one, tell the user the layout was budgeted rather than viewed, and don't claim that a slide fits.
+If LibreOffice or another renderer is available, convert the deck to PDF (`soffice --headless --convert-to pdf`), render the pages (`pdftoppm -png -r 110`) and look at every slide; fix anything that clips, overflows or overlaps, and check again. Without a renderer, measure each text box against its size using the font files, tell the user the layout was measured rather than viewed, and don't claim that the slides look right.
 
 ### Output
 
-- In claude.ai, where `/mnt/user-data/outputs/` exists, save the deck there and present it with `present_files`.
-- Elsewhere, save it in the current working directory (or wherever the user asks) and give the path.
-- Name the file `offer-deck-[client-slug].html`.
+- Save each deck in its own folder inside `Offer decks/`, named `[Client name] - [Offer type] Offer - [YYYY-MM-DD]`, and name the file `[Client name] Offer Deck.pptx`. For example: `Offer decks/Northline Electrical Solutions - Website Offer - 2026-09-15/Northline Electrical Solutions Offer Deck.pptx`.
+- Create `Offer decks/` on the first run. Never overwrite an earlier deck; if the folder already exists, add ` v2`, ` v3`.
+- The folder holds the presentation only. Build scripts and other working files stay outside it.
+- In claude.ai, where `/mnt/user-data/outputs/` exists, create `Offer decks/` there and present the file with `present_files`.
+- Elsewhere, create it in the current working directory (or wherever the user asks) and give the path.
 
 ## Guardrails
 
