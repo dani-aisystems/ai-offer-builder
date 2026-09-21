@@ -12,7 +12,9 @@ asking. So each run is a real conversation:
   only what the executor asked and follows the eval's scripted pushes.
 
 Writes per run directory:
-  outputs/        executor working directory (the deck lands here); transcript.md copied in at the end
+  outputs/        executor working directory (the deck lands here); transcript.md copied in at the end.
+                  An eval's optional "seed" list ({"from": repo-relative, "to": outputs-relative}) is
+                  copied in before turn 1, for scenarios that start from files an earlier run saved.
   logs/           raw executor stream-json and simulated-user output, per turn
   transcript.md   the conversation rebuilt from the logs, including every tool call
   timing.json     tokens and durations summed from the executor's result events
@@ -42,7 +44,9 @@ USER_MODEL = "claude-sonnet-5"
 TOOLSETS = {
     "web": "Read,Write,Edit,Glob,Grep,WebSearch,WebFetch",
     "no_web": "Read,Write,Edit,Glob,Grep",
+    "docs": "Read,Write,Edit,Glob,Grep,Bash",  # building a .docx and its PDF needs scripts
 }
+REPO_ROOT = Path(__file__).resolve().parent.parent
 END = "[END]"
 TURN_TIMEOUT_S = 45 * 60
 _print_lock = threading.Lock()
@@ -210,7 +214,20 @@ def render_tool_input(name: str, inp: dict) -> str:
     return json.dumps(inp, ensure_ascii=False)[:300]
 
 
-def write_artifacts(ev, config, run_no, run_dir, outputs, turns, wall_s, status, session_id) -> None:
+def seed_outputs(ev: dict, outputs: Path) -> set[Path]:
+    """Copy the eval's seed files into the executor's working directory; return their paths."""
+    seeded = set()
+    for entry in ev.get("seed", []):
+        dst = outputs / entry["to"]
+        if not dst.exists():
+            dst.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(REPO_ROOT / entry["from"], dst)
+        seeded.add(dst.resolve())
+    return seeded
+
+
+def write_artifacts(ev, config, run_no, run_dir, outputs, turns, wall_s, status, session_id,
+                    seeded=frozenset()) -> None:
     lines = [f"# Transcript: eval {ev['id']} ({ev['name']}), {config}, run {run_no}", "",
              f"Status: {status}", ""]
     tool_counts, tool_errors = {}, 0
@@ -251,12 +268,15 @@ def write_artifacts(ev, config, run_no, run_dir, outputs, turns, wall_s, status,
     }
     (run_dir / "timing.json").write_text(json.dumps(timing, indent=2), encoding="utf-8")
 
-    files = [p for p in outputs.iterdir() if p.is_file() and p.name not in ("transcript.md", "metrics.json")]
+    skip_dirs = {"node_modules", "__pycache__"}  # packages a build script may install in the cwd
+    files = [p for p in sorted(outputs.rglob("*")) if p.is_file() and p.resolve() not in seeded
+             and p.relative_to(outputs).as_posix() not in ("transcript.md", "metrics.json")
+             and not any(part in skip_dirs or part.startswith(".") for part in p.relative_to(outputs).parts)]
     metrics = {
         "tool_calls": tool_counts,
         "total_tool_calls": sum(tool_counts.values()),
         "total_steps": len(turns),
-        "files_created": [p.name for p in files],
+        "files_created": [p.relative_to(outputs).as_posix() for p in files],
         "errors_encountered": tool_errors,
         "output_chars": sum(p.stat().st_size for p in files),
         "transcript_chars": len(transcript),
@@ -274,6 +294,7 @@ def run_one(base, ev, config, run_no, skill_dir: Path, run_dir: Path) -> str:
     outputs, logs = run_dir / "outputs", run_dir / "logs"
     outputs.mkdir(parents=True, exist_ok=True)
     logs.mkdir(parents=True, exist_ok=True)
+    seeded = seed_outputs(ev, outputs)
     listing = skill_listing(skill_dir)
     tools = TOOLSETS[ev.get("tools", "web")]
     persona = persona_prompt(ev)
@@ -303,7 +324,8 @@ def run_one(base, ev, config, run_no, skill_dir: Path, run_dir: Path) -> str:
             status = "completed"
             break
         message = nxt
-    write_artifacts(ev, config, run_no, run_dir, outputs, turns, time.time() - started, status, session_id)
+    write_artifacts(ev, config, run_no, run_dir, outputs, turns, time.time() - started, status, session_id,
+                    seeded)
     return status
 
 

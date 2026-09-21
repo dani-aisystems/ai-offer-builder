@@ -1,6 +1,6 @@
 # ai-offer-builder
 
-A Claude skill for agencies that sell websites or AI automation. Tell it about a prospect and it builds three tiered packages plus a custom option, then a single-file HTML sales deck. Everything is written in the client's language and currency, under your agency's brand.
+A Claude skill for agencies that sell websites or AI automation. Tell it about a prospect and it builds three tiered packages plus a custom option, then a single-file HTML sales deck. Once the client says yes, it turns the accepted package into a short project scope and plan document to work from during the build. Everything is written in the client's language and currency, under your agency's brand.
 
 It works in Claude Code, Claude.ai, the Claude desktop app and the Claude API. MIT licensed.
 
@@ -14,6 +14,8 @@ The skill works in six steps and waits for your approval where it matters:
 3. **Packages.** Three tiers plus a custom option, shown next to the research log for your approval.
 4. **Deck plan.** A ten-slide outline for your approval.
 5. **Build.** One self-contained HTML file, `offer-deck-<client>.html`, with keyboard and on-screen navigation.
+
+It also saves an internal offer record, `Offer record (internal).md`, with the full approved packages, prices and client context. The deck shows only the strongest features, so the record is what the project scope document is built from later.
 
 ## What the skill enforces
 
@@ -54,7 +56,7 @@ Copy-Item -Recurse ai-offer-builder\skills\ai-offer-builder "$HOME\.claude\skill
 
 ### Claude.ai and the desktop app
 
-Download `ai-offer-builder.zip` from the [latest release](https://github.com/dani-aisystems/ai-offer-builder/releases/latest) and upload it in Claude's skill settings. The zip contains `ai-offer-builder/SKILL.md` and nothing else.
+Download `ai-offer-builder.zip` from the [latest release](https://github.com/dani-aisystems/ai-offer-builder/releases/latest) and upload it in Claude's skill settings. The zip contains the `ai-offer-builder/` folder: `SKILL.md` and `references/project-scope.md`.
 
 ### Claude API
 
@@ -84,23 +86,56 @@ What separates the tiers of an automation offer is your own pricing methodology,
 
 It continues once you answer them in your own words, and it will not make tiers up for you, even for a demo. If an offer covers both a website and automation, it builds the website part straight away and adds automation once the tiers are defined.
 
+### After the client says yes: project scope document
+
+Tell it which package the client chose, for example "They went with Package 2, create the project scope document" or "Клиентът избра пакет „Растеж“, направи документа за обхвата". It rebuilds the accepted offer from the conversation, the saved offer record or the deck, and asks only for what is missing.
+
+It then writes a short client-facing document (*Обхват и план на проекта* in Bulgarian). The document covers:
+
+- scope and exclusions
+- what the client provides
+- when the build period starts
+- milestones
+- revisions and scope changes
+- payment
+- launch and support
+
+It is a working reference for both sides, not a contract.
+
+You get a `.docx` in your brand plus a PDF copy, saved next to the deck. The chat shows only a short summary of the data used, the defaults applied and any open points.
+
+Where the accepted offer doesn't settle a term, the skill uses these defaults and flags each one in the summary, so you can change it before sending:
+
+| Term | Default |
+|---|---|
+| Client materials and access | Within 5 business days of the kickoff |
+| Build period | 10–14 business days, starting only once all essential materials and access are in |
+| Payment | 25% at the start; 75% after final approval, before the site is published |
+| Communication | A kickoff call, then one shared Viber or WhatsApp group |
+| Revisions | Reasonable revisions within scope, with no fixed count |
+
+It never adds scope the offer didn't include, and it never invents a support period.
+
 ## Repository layout
 
 | Path | What it is |
 |---|---|
-| `skills/ai-offer-builder/SKILL.md` | The skill itself. This is the only file you need to use it. |
+| `skills/ai-offer-builder/SKILL.md` | The skill itself. |
+| `skills/ai-offer-builder/references/project-scope.md` | Instructions for the project scope document. The skill reads it only after a client has accepted an offer. |
 | `.claude-plugin/` | Plugin and marketplace manifests for Claude Code's `/plugin` command. |
-| `evals/evals.json` | Eight multi-turn scenarios, each with a simulated-user persona and expectations. |
+| `evals/evals.json` | Eleven multi-turn scenarios, each with a simulated-user persona and expectations; 9–11 cover the project scope document. |
 | `evals/prepare_iteration.py` | Freezes the skill under test and writes the run plan for one iteration. |
 | `evals/run_conversation.py` | Runs each scenario as a real conversation: `claude -p` as the executor against a simulated user. |
 | `evals/check_deck.py` | Mechanical evidence: language, hex codes, fonts, currency, tax mentions, and whether each deck figure appears in the run's web results. |
 | `evals/verify_sources.py` | Fetches every cited page raw, with no summariser in between, and checks the cited figures are on it. |
+| `evals/check_scope.py` | Evidence for the scope evals: the document's text, prices, terms, contract wording, fonts, colors and PDF pages. |
+| `evals/fixtures/` | Seed files for scenarios that start from an offer saved in an earlier session. |
 | `evals/layout_probe.js`, `make_layout_job.py`, `split_layout_results.py` | Playwright layout QA at four viewports: overflow, overlaps, contrast, minimum font size and navigation. |
 | `evals/grader_prompt.md` | Brief for the grader agents, on top of skill-creator's `grader.md`. |
 
 ## Running the evals
 
-You need the evals only if you're changing the skill. Each run is a real conversation on your Claude usage, and a full iteration is 12 to 22 conversations, most of them with web research.
+You need the evals only if you're changing the skill. Each run is a real conversation on your Claude usage, and a full iteration is 16 to 29 conversations, most of them with web research.
 
 You need:
 
@@ -108,6 +143,7 @@ You need:
 - Python 3.11+
 - `pypdf` for PDF sources (optional)
 - the Playwright MCP server, for layout QA
+- LibreOffice (`soffice`) and poppler (`pdftoppm`, `pdfinfo`), for the scope evals
 - Anthropic's [skill-creator](https://github.com/anthropics/skills) skill, for grading and the benchmark
 
 The comparison baseline is the v2 draft kept in this repo's history. Extract it once:
@@ -125,6 +161,7 @@ python evals/prepare_iteration.py --workspace $ws --iteration 1 --new-skill skil
 python evals/run_conversation.py --evals evals/evals.json --plan $ws/iteration-1/plan.json --workers 4
 python evals/check_deck.py --iteration $ws/iteration-1
 python evals/verify_sources.py --iteration $ws/iteration-1
+python evals/check_scope.py --iteration $ws/iteration-1
 python evals/make_layout_job.py --root $ws --out .playwright-mcp/layout-job.js --result $ws/iteration-1/layout-results.json <run dirs>
 ```
 

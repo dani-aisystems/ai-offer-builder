@@ -18,6 +18,17 @@ Evidence in each run directory:
   - demo, automation and no-search checks
 - `sources.json`: cited URLs fetched raw, with no summariser in between, marked verified / partial / not_found / unverifiable.
 - `layout.json`: layout QA at four viewports (overflow, overlaps, contrast failures, navigation), when present.
+- For the project-scope evals (9–11), instead of a deck:
+  - `scope.txt`: the saved .docx's text, one paragraph per line, headings marked `#`
+  - `scope_checks.json`, from `check_scope.py`:
+    - prices and tax wording
+    - contract or signature wording
+    - default and agreed-term markers
+    - fonts, colors and shaded paragraphs
+    - `brand_color_text`: text set in a brand hex, with its size, boldness and contrast on white
+    - PDF page count and seed integrity
+    - the questions the assistant asked before writing the document
+  - `scope-page-N.png`: renders of the PDF's pages. Open them with Read.
 
 Grading rules for this skill:
 - The burden of proof is on passing.
@@ -29,6 +40,8 @@ Grading rules for this skill:
 - Contrast and layout: use `layout.json`. The contrast expectation refers to the laptop-1280x720 viewport.
 - "Asked before assuming" expectations: check the order in `transcript.md`. The assistant's question has to come before the user's answer, and no client-facing copy in that dimension (language, currency) may appear before it.
 - Demo runs: if you have a web search tool, search the invented business name together with its city once and report what you found.
+- Scope evals: a default (5 business days, 10–14 business days, 25% / 75%, Viber/WhatsApp group) passes only where the opening message left that term open. Read the opening message to see what the offer fixed. `default_markers` shows only that a marker appears somewhere; read `scope.txt` for what it says.
+- Brand-accent contrast (scope evals): accent-colored text passes when it meets 4.5:1, or 3:1 for large text (≥14 pt bold / ≥18 pt regular). Use `brand_color_text`, and check the page renders for text on tinted fills.
 - Evidence must be specific: quote the transcript or deck, or cite the field in `checks.json`, `sources.json` or `layout.json`.
 
 Also fill these fields as grader.md describes:

@@ -5,6 +5,26 @@ __pycache__/
 .claude/
 .DS_Store
 .claude/settings.local.json
-.env
-.env.local
 node_modules/
+
+# Secrets and local environment
+.env
+.env.*
+!.env.example
+
+# Generated client work: offer decks, offer records, scope documents
+Offer decks/
+outputs/
+**/eval-*/**/outputs/
+scratchpad/
+tmp/
+.private/
+
+# Client and project data
+clients/
+client-data/
+research/private/
+offer-records/private/
+
+# Generated documents (versioned templates and fixtures go under evals/fixtures/ as .pptx/.docx/.md)
+*.pdf
