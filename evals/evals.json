@@ -1,6 +1,6 @@
 {
   "skill_name": "ai-offer-builder",
-  "notes": "Multi-turn evals. 'prompt' is the user's opening message; 'persona' is what the simulated user knows and reveals only when asked; 'pushes' are scripted replies. Run with evals/run_conversation.py. Assertions live in 'expectations'.",
+  "notes": "Multi-turn evals. 'prompt' is the user's opening message; 'persona' is what the simulated user knows and reveals only when asked; 'pushes' are scripted replies. Run with evals/run_conversation.py. Assertions live in 'expectations'. Evals 9–11 test the project-scope task (after a client accepts an offer): they use the 'docs' toolset, and 'seed' copies files into the run's working directory before the first turn. Collect their evidence with evals/check_scope.py.",
   "evals": [
     {
       "id": 1,
@@ -190,6 +190,97 @@
         "Never claims research was done or presents remembered statistics as research findings",
         "The deck's only figures are prices, client-supplied numbers and labelled hypotheticals (no industry statistics)",
         "The deck is still produced and complete (10 slides or the approved plan)"
+      ]
+    },
+    {
+      "id": 9,
+      "name": "scope-bg-defaults",
+      "prompt": "Автосервиз Пример приеха офертата! Избраха пакет 2 „Растеж“. Направи ми документа за обхвата и плана на проекта, за да им го пратя.\n\nЕто пакета точно както го одобрихме:\n\nПакет 2 — Растеж (1 100 € еднократно, без ДДС)\nМногостраничен сайт, до 8 страници\n- Индивидуален дизайн, оптимизиран за телефон и таблет — сайтът изглежда професионално на всяко устройство.\n- Отделна страница за всяка основна услуга (компютърна диагностика, ремонт, сервизни пакети) — всеки клиент намира точно това, което търси.\n- Ценоразпис на сервизните пакети с фиксирани цени — клиентите знаят цената, преди да се обадят.\n- Онлайн форма за записване на час, която пристига директно на имейла на сервиза — по-малко обаждания и нито едно изпуснато запитване.\n- Бутон за обаждане и карта с упътване (Google Maps) — клиентът стига до сервиза с едно докосване.\n- Свързване и оптимизация на Google Business Profile — повече видимост в Google Maps.\n- Основна SEO оптимизация на всички страници (заглавия, описания, структура) — Google разбира какво предлагате и къде.\n\nПоддръжка: първият месец е безплатен, след това 45 € на месец (хостинг, актуализации за сигурност, архивиране и дребни промени по текстовете).\n\nИдентичността ни:\nAGENCY IDENTITY\nName: Example Digital\nColors: background #0A0A0A, surface #111111, text #F5F5F5, accent #D1A945\nFonts: headings Playfair Display, body Inter\nTone: premium and exclusive\nContact: email hello@example.com | web example.com\nLogo: none",
+      "persona": "You are Maria, owner of the web agency Example Digital. You write in Bulgarian.\n\nThe client, Автосервиз Пример in Plovdiv (4 mechanics, private customers plus a few company fleets), accepted Package 2 'Растеж' exactly as pasted in your first message. Everything agreed is in that message.\n\nOnly if asked about payment terms, deadlines or revision rounds: nothing beyond the offer was discussed with the client; reply 'Използвай стандартните ни условия.'\nOnly if asked about the kickoff: the call isn't booked yet.\nOnly if asked about the domain: the client owns avtoservizprimer.example; you don't know the registrar.\nOnly if asked about photos: the client has their own photos of the workshop, nothing professional.\nOnly if asked which chat app: Viber.\nFor anything else, say you don't know.",
+      "tools": "docs",
+      "max_turns": 6,
+      "runs": {
+        "new_skill": 1,
+        "old_skill": 1
+      },
+      "expected_output": "Without re-asking anything pasted in the first message, the assistant saves a Bulgarian 'Обхват и план на проекта' .docx and PDF in Example Digital's identity. It restates only the pasted package at 1 100 € без ДДС, applies the skill's defaults (5 business days for materials, build clock starting on essential materials, 10–14 business days, 25% / 75%, one Viber/WhatsApp group) and flags them as defaults in a short chat summary.",
+      "files": [],
+      "expectations": [
+        "Does not ask for the package, price, features, support fee or agency identity that the opening message already gave",
+        "A .docx and a matching PDF are saved, and the PDF is 2–4 pages",
+        "The document is in Bulgarian and titled 'Обхват и план на проекта' (or clearly equivalent), and never calls itself a договор, споразумение or contract; it has no signature lines",
+        "The price is 1 100 € (any correct Bulgarian formatting) with 'без ДДС' kept, and no VAT rate is stated",
+        "The agreed scope contains only the pasted package's features; nothing research-only or new (such as online payments, a blog, ads or extra languages) is promised",
+        "States that essential materials and access are due within 5 business days of the kickoff",
+        "States explicitly, set apart from the body text, that the build period starts only once all essential materials and access are received (not at the kickoff)",
+        "Uses 10–14 business days as the build period and 25% at start / 75% after final approval and before publishing, since the offer set neither",
+        "Shows maintenance (first month free, then 45 € a month) separately from the one-time price",
+        "Includes reasonable revisions within scope without a fixed number of rounds, and ties out-of-scope requests to possible extra cost and time without inventing a price",
+        "Client confirmation is a short 'Потвърждавам' reply in the shared Viber/WhatsApp group",
+        "The chat reply gives a short summary of the data used, marks each default as a default, lists open points, and does not paste the whole document",
+        "The document uses Example Digital's accent #D1A945 and Playfair Display/Inter on light pages. The brand accent is used for text only where it meets the applicable contrast threshold: 4.5:1 for normal text or 3:1 for large text (≥14 pt bold / ≥18 pt regular); otherwise it appears only on non-text graphical elements"
+      ]
+    },
+    {
+      "id": 10,
+      "name": "scope-own-terms",
+      "prompt": "Great news, Hartley & Sons said yes to Growth! Can you write up the project scope document for them? Here's what we agreed.\n\nPackage 2 — Growth (£2,650 one-time, excl. VAT)\nMulti-page site, up to 8 pages\n- Custom design built for phones first — looks right wherever customers find you.\n- A page for each service: emergency call-outs, boiler installation, servicing, landlord gas safety certificates — each job gets found for its own searches.\n- Quote request form with boiler type and photos — quotes go out faster, with fewer back-and-forth calls.\n- Click-to-call and the 24/7 emergency line on every page — no emergency call lost to a hard-to-find number.\n- Gas Safe and reviews section — trust before anyone picks up the phone.\n- Google Business Profile set-up and optimisation — stronger visibility on Google Maps in Bristol.\n- Blog set up with three starter articles — helpful answers that bring in search traffic.\n\nSupport: first month free, then £65/month (hosting, updates, backups, small text changes).\n\nTerms from our offer: 50% deposit to book the start date, 50% on launch. The site goes live within 3 weeks of us receiving all content. Two rounds of revisions included. 30 days of post-launch bug fixes included.\n\nOn the call they asked to drop the blog, so we agreed £2,400 + VAT instead.\n\nOur identity:\nAGENCY IDENTITY\nName: Fernhill Studio\nColors: background #FAF7F2, text #1B3A4B, accent #E4572E\nFonts: headings Fraunces, body DM Sans\nTone: warm, down-to-earth and approachable\nContact: email hello@fernhill.example | web fernhill.example\nLogo: none",
+      "persona": "You are Tom, owner of Fernhill Studio, a small web design agency in Bristol, UK. You write in English.\n\nThe client, Hartley & Sons Plumbing (a family plumbing and heating firm in Bristol with 6 engineers), accepted Package 2 'Growth' with the changes in your first message. Everything agreed is in that message.\n\nOnly if asked about the kickoff: the call isn't booked yet.\nOnly if asked which chat app you use with clients: WhatsApp.\nOnly if asked about materials: the client has a logo file and their own photos of the vans and team.\nOnly if asked about the domain: the client owns hartleyplumbing.example; you don't know the registrar.\nFor anything else, say you don't know.",
+      "tools": "docs",
+      "max_turns": 6,
+      "runs": {
+        "new_skill": 1,
+        "old_skill": 1
+      },
+      "expected_output": "The offer's own terms replace the skill's defaults: 50/50 payment, live within 3 weeks of receiving all content, two revision rounds, 30 days of bug fixes, £2,400 + VAT with the blog removed. Only terms the offer left open get defaults, flagged as such.",
+      "files": [],
+      "expectations": [
+        "Does not ask for the package, price, terms or agency identity that the opening message already gave",
+        "A .docx and a matching PDF are saved, and the PDF is 2–4 pages",
+        "Payment is 50% deposit and 50% on launch; 25% / 75% appears nowhere",
+        "The timeline is live within 3 weeks of receiving all content; the 10–14 business-day default is not used",
+        "States two rounds of revisions, the offer's count",
+        "Post-launch support is the 30 days of bug fixes plus the £65/month maintenance after a free first month, shown separately from the one-time price; no other support period is invented",
+        "The price is £2,400 excluding VAT; £2,650 is not presented as the price and no VAT rate is stated",
+        "The blog is not in the agreed scope; if it appears, it is only as excluded or removed",
+        "The document is in English, titled like 'Project Scope and Plan', never calls itself a contract or agreement, and has no signature lines",
+        "The document uses Fernhill Studio's fonts (Fraunces, DM Sans) and colors (#1B3A4B, #E4572E)",
+        "The chat summary marks as defaults only the terms the offer left open (such as the materials deadline or the channel), never the offer's own terms"
+      ]
+    },
+    {
+      "id": 11,
+      "name": "scope-later-session",
+      "prompt": "Example Electrical went with Package 2! Can you put together the project scope document for them?",
+      "persona": "You are Sam, who runs Example Digital, a small web agency in Toronto. You write in English.\n\nLast week you built a website offer for Example Electrical Solutions with this assistant. The deck and the offer record were saved in this project's 'Offer decks' folder. The client accepted Package 2 (Growth) at the offer price with no changes.\n\nIf asked for anything that is in the offer (packages, features, prices, agency identity, client details), reply: 'It should all be in the offer folder from last week.'\nOnly if asked about payment terms, timeline or revision rounds: nothing beyond the offer was agreed; reply 'Use our standard terms.'\nOnly if asked about the kickoff: the call isn't booked yet.\nOnly if asked about photos: the client will send their own project photos.\nFor anything else, say you don't know.",
+      "seed": [
+        {
+          "from": "evals/fixtures/example-electrical/Example Electrical Solutions Offer Deck.pptx",
+          "to": "Offer decks/Example Electrical Solutions - Website Offer - 2026-09-15/Example Electrical Solutions Offer Deck.pptx"
+        },
+        {
+          "from": "evals/fixtures/example-electrical/Offer record (internal).md",
+          "to": "Offer decks/Example Electrical Solutions - Website Offer - 2026-09-15/Offer record (internal).md"
+        }
+      ],
+      "tools": "docs",
+      "max_turns": 6,
+      "runs": {
+        "new_skill": 2,
+        "old_skill": 1
+      },
+      "expected_output": "In a fresh session, the assistant finds the saved offer record and deck, rebuilds the accepted Growth scope from the record's full lists (including features that are not on the deck) without asking the user to re-enter anything, and saves the scope .docx and PDF next to the deck in Example Digital's identity.",
+      "files": [],
+      "expectations": [
+        "Reads the offer record (and/or deck) in 'Offer decks/' before writing, without asking the user to paste packages, prices, identity or client details",
+        "The scope includes the record-only Growth features (the switchable emergency banner and on-page SEO for every page) along with the Foundation items Growth builds on",
+        "No Dominance-only item (Google Ads, ad landing pages, GTA community pages, directory listings, monthly guides) is in scope; any mention is only as not included",
+        "The price is CA$2,650 with 'before HST, plus applicable tax' kept, and no HST rate is stated",
+        "Maintenance (first month free, then CA$149/month) is shown separately from the one-time price",
+        "Uses the defaults (5 business days, build clock on essential materials, 10–14 business days, 25% / 75%, Viber/WhatsApp group) and flags them as defaults in chat; any split amounts add up to CA$2,650",
+        "The .docx and a 2–4 page PDF are saved in the Example Electrical folder in 'Offer decks/', and the seeded deck and record are unchanged",
+        "The document carries Example Digital's name and contact details, and uses Manrope/Inter and accent #D97757. The brand accent is used for text only where it meets the applicable contrast threshold: 4.5:1 for normal text or 3:1 for large text (≥14 pt bold / ≥18 pt regular); otherwise it appears only on non-text graphical elements",
+        "The document is in English, never calls itself a contract or agreement, and has no signature lines"
       ]
     }
   ]

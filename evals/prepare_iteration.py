@@ -2,7 +2,8 @@
 """Freeze the skill versions under test and lay out one iteration for run_conversation.py.
 
 Creates, inside the workspace:
-  iteration-N/skill-under-test/SKILL.md          frozen copy of the new skill (edits mid-run can't leak in)
+  iteration-N/skill-under-test/                  frozen copy of the new skill folder, SKILL.md plus references/
+                                                  (edits mid-run can't leak in)
   iteration-N/eval-<id>-<name>/eval_metadata.json
   iteration-N/plan.json                           one entry per run
 
@@ -30,8 +31,8 @@ def main() -> None:
 
     iteration_dir = args.workspace / f"iteration-{args.iteration}"
     frozen = iteration_dir / "skill-under-test"
-    frozen.mkdir(parents=True, exist_ok=True)
-    shutil.copyfile(args.new_skill / "SKILL.md", frozen / "SKILL.md")
+    frozen.parent.mkdir(parents=True, exist_ok=True)
+    shutil.copytree(args.new_skill, frozen, dirs_exist_ok=True)
     skill_dirs = {"new_skill": frozen.resolve(), "old_skill": args.old_skill.resolve()}
 
     evals = json.loads(args.evals.read_text(encoding="utf-8"))["evals"]

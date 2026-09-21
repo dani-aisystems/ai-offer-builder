@@ -1,6 +1,6 @@
 ---
 name: ai-offer-builder
-description: Pricing offer and sales deck builder for agency client pitches. Turns a prospect's context into three tiered packages plus a custom option and a PowerPoint (.pptx) presentation, for website builds or AI automation/services (chatbots, workflow automations, AI agents). Works through agency identity, client context, web research for real sourced industry data, packages, deck plan and build, in the client's language and currency and the agency's own brand. Use whenever someone wants to package or price a website or an AI service for a client, build a sales or pitch deck or a client offer, or says things like "create packages for client", "build offer for", "price my AI service", "price my automation", "направи оферта", "пакети за сайт", "sales deck за клиент". Also use for demo or sample runs with a fictional client, such as screen recordings.
+description: Pricing offer and sales deck builder for agency client pitches. Turns a prospect's context into three tiered packages plus a custom option and a PowerPoint (.pptx) presentation, for website builds or AI automation/services (chatbots, workflow automations, AI agents). Works through agency identity, client context, web research for real sourced industry data, packages, deck plan and build, in the client's language and currency and the agency's own brand. Use whenever someone wants to package or price a website or an AI service for a client, build a sales or pitch deck or a client offer, or says things like "create packages for client", "build offer for", "price my AI service", "price my automation", "направи оферта", "пакети за сайт", "sales deck за клиент". Also use for demo or sample runs with a fictional client, such as screen recordings, and after a client accepts an offer, to write the project scope and plan document ("they chose Package 2", "обхват и план на проекта").
 ---
 
 # Offer Builder — websites and AI services
@@ -25,12 +25,15 @@ There are six phases. Each ends on the condition in brackets; move on only when 
 4. **Deck plan** — [the user has approved the slide plan]
 5. **Build** — [the deck file is saved and passes the pre-delivery check]
 
+Once a client has accepted an offer, the next job is different: a project scope document that restates the accepted package for the build. It follows `references/project-scope.md` instead of these phases.
+
 Talk to the user in the language they write in. Write everything client-facing — packages and deck — in the **deck language** (the client's), which you confirm in Phase 1. Often the two are the same. When they differ, the chat stays in the user's language and only the deliverable switches.
 
 ## Start: read the request
 
-Before asking anything, work out three things from the user's first message and anything they've pasted.
+Before asking anything, work out four things from the user's first message and anything they've pasted.
 
+- **Task.** Building an offer, or documenting one the client has already accepted ("they chose Package 2", "create the scope document", "клиентът избра пакет…"). For an accepted offer, read `references/project-scope.md` and follow it alone: no phases, no deck. The automation gate doesn't apply there, because that document takes its scope from the accepted offer and never creates any.
 - **Mode.** A run is *demo* when the user wants a fictional client: they say demo, sample or recording, or ask you to invent a client. Otherwise it's a *real* engagement — including a quick "test" for a client whose details look real.
 - **Offer type.** Website, AI automation/service, or both. If it isn't clear, ask in Phase 1.
 - **Existing material.** An agency identity block, call notes, a transcript, earlier answers. Extract everything already covered and ask only about real gaps.
@@ -330,6 +333,7 @@ Before handing the deck over, go through the file and confirm each item:
 - The contact details on slide 10 are the agency's from Phase 0, or marked placeholders.
 - In demo runs, the demo marker is present and every contact detail is fake.
 - The file opens: every XML part in the package parses (python-pptx alone won't notice a broken one), and loading it back (for example with python-pptx) shows the right slide count, the 16:9 size and no shape outside the slide. pptxgenjs writes `company` into `docProps/app.xml` without escaping it, so escape `&`, `<` and `>` there yourself.
+- The offer record (see Output) is saved next to the deck, and its packages match the ones the user approved, word for word.
 
 If LibreOffice or another renderer is available, convert the deck to PDF (`soffice --headless --convert-to pdf`), render the pages (`pdftoppm -png -r 110`) and look at every slide; fix anything that clips, overflows or overlaps, and check again. Without a renderer, measure each text box against its size using the font files, tell the user the layout was measured rather than viewed, and don't claim that the slides look right.
 
@@ -337,7 +341,14 @@ If LibreOffice or another renderer is available, convert the deck to PDF (`soffi
 
 - Save each deck in its own folder inside `Offer decks/`, named `[Client name] - [Offer type] Offer - [YYYY-MM-DD]`, and name the file `[Client name] Offer Deck.pptx`. For example: `Offer decks/Northline Electrical Solutions - Website Offer - 2026-09-15/Northline Electrical Solutions Offer Deck.pptx`.
 - Create `Offer decks/` on the first run. Never overwrite an earlier deck; if the folder already exists, add ` v2`, ` v3`.
-- The folder holds the presentation only. Build scripts and other working files stay outside it.
+- Save an **offer record** in the same folder as `Offer record (internal).md`. The deck shows only the strongest features and no payment terms, so once the client says yes, this record is what the project scope document is built from, often in a later session. Write it in the user's chat language, but copy the package text exactly as approved, in the deck language. It holds:
+  - client name, offer type, date and the deck's file name
+  - the identity block from Phase 0 (or a note that the fallback was used)
+  - the Phase 1 answers: business, situation, pain point, goals, deck language, currency, country, tax presentation and Package 1 budget
+  - the approved packages in full, with every feature, price, support fee and the tax wording shown on the deck
+  - payment terms, timeline and any other commitment the user gave (for example a deposit share or a delivery time), or "not specified"
+  - the research log
+- The folder holds the presentation and the offer record, and later the project scope document. Build scripts and other working files stay outside it. The record is internal: tell the user it is not for the client.
 - In claude.ai, where `/mnt/user-data/outputs/` exists, create `Offer decks/` there and present the file with `present_files`.
 - Elsewhere, create it in the current working directory (or wherever the user asks) and give the path.
 
@@ -347,5 +358,6 @@ If LibreOffice or another renderer is available, convert the deck to PDF (`soffi
 - Language, currency, tax presentation and brand come from this conversation's agency and client.
 - Packages are approved before the deck plan, and the deck plan before the build.
 - Automation tiers come from the user's own definition; until then, the automation gate applies.
+- A project scope document restates the accepted offer; it never adds scope.
 - Every feature bullet answers "what does this do for the business?"
 - The deck is ready for a real prospect: professional, consistent, error-free.
