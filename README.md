@@ -56,7 +56,7 @@ Copy-Item -Recurse ai-offer-builder\skills\ai-offer-builder "$HOME\.claude\skill
 
 ### Claude.ai and the desktop app
 
-Download `ai-offer-builder.zip` from the [latest release](https://github.com/dani-aisystems/ai-offer-builder/releases/latest) and upload it in Claude's skill settings. The zip contains the `ai-offer-builder/` folder: `SKILL.md` and `references/project-scope.md`.
+Download `ai-offer-builder.zip` from the [latest release](https://github.com/dani-aisystems/ai-offer-builder/releases/latest) and upload it in Claude's skill settings. The zip contains the `ai-offer-builder/` folder: `SKILL.md`, the files in `references/` and the QA scripts in `scripts/`.
 
 ### Claude API
 
@@ -74,7 +74,7 @@ Research needs a web search tool. Without one, the skill says so and builds the 
 
 ### Website tiers
 
-Website offers use a built-in ladder: a single-page site, a multi-page site (the recommended tier), and a multi-page site plus ads and SEO. Package 2 is priced at about 1.7–1.9× your Package 1 budget and Package 3 at about 3–3.5×, each with a first month of support free and a monthly fee after that. Change any of it in the chat before you approve the packages.
+Website offers use a built-in ladder: a single-page site, a multi-page site (the recommended tier), and the fullest site build (more pages and languages, booking flow, deeper SEO, tracking). Ads management is a separate add-on, never part of a tier unless you say you deliver it. Package 2 is priced at about 1.7–1.9× your Package 1 budget and Package 3 at about 2.5–3.5×, as a sanity check on prices derived from scope, each with a first month of support free and a monthly fee after that. Change any of it in the chat before you approve the packages.
 
 ### AI automation offers
 
@@ -121,6 +121,11 @@ It never adds scope the offer didn't include, and it never invents a support per
 | Path | What it is |
 |---|---|
 | `skills/ai-offer-builder/SKILL.md` | The skill itself. |
+| `skills/ai-offer-builder/references/offer-principles.md` | The nine layers of an offer, the client brief, personalisation, package differentiation, pricing, recommendation, the trust slide, ROI. |
+| `skills/ai-offer-builder/references/deck-design-and-copy.md` | Working from a reference deck, design principles and copywriting rules (no em dashes). |
+| `skills/ai-offer-builder/references/workflow-and-qa.md` | Reference-deck slide map, the render and critique loop, the self-critique gate. |
+| `skills/ai-offer-builder/scripts/deck_qa.py`, `fit_check.py` | Deck QA: structure, em dashes, placeholders, package and price consistency, check marks, contrast; and text fit measured with the real fonts at wider text widths. Need `python-pptx`, `Pillow`, `lxml`. |
+| `CLAUDE.md`, `LEARNINGS.md` | Routing and non-negotiables for Claude Code sessions in this repo; the log of why the system changed. |
 | `skills/ai-offer-builder/references/project-scope.md` | Instructions for the project scope document. The skill reads it only after a client has accepted an offer. |
 | `.claude-plugin/` | Plugin and marketplace manifests for Claude Code's `/plugin` command. |
 | `evals/evals.json` | Eleven multi-turn scenarios, each with a simulated-user persona and expectations; 9–11 cover the project scope document. |

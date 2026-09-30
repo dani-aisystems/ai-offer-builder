@@ -27,6 +27,18 @@ There are six phases. Each ends on the condition in brackets; move on only when 
 
 Once a client has accepted an offer, the next job is different: a project scope document that restates the accepted package for the build. It follows `references/project-scope.md` instead of these phases.
 
+### Reference files
+
+Three short files next to this one hold standing principles. Read them at the point shown; do not wait to be asked.
+
+| File | Read it | What it holds |
+|---|---|---|
+| `references/offer-principles.md` | before Phase 3, again in Phase 4 | the nine layers of an offer, the research brief, personalisation, package differentiation, pricing, recommendation, trust slide, ROI |
+| `references/deck-design-and-copy.md` | before Phase 4 and Phase 5 | working from a reference deck, design principles, copywriting rules (no em dashes) |
+| `references/workflow-and-qa.md` | at the start of Phase 4, and before delivering | reference-deck slide map, render and critique loop, the two QA scripts, the self-critique gate |
+
+If they conflict with something the user said in this conversation, the user wins for this deck; say so once.
+
 Talk to the user in the language they write in. Write everything client-facing — packages and deck — in the **deck language** (the client's), which you confirm in Phase 1. Often the two are the same. When they differ, the chat stays in the user's language and only the deliverable switches.
 
 ## Start: read the request
@@ -36,7 +48,7 @@ Before asking anything, work out four things from the user's first message and a
 - **Task.** Building an offer, or documenting one the client has already accepted ("they chose Package 2", "create the scope document", "клиентът избра пакет…"). For an accepted offer, read `references/project-scope.md` and follow it alone: no phases, no deck. The automation gate doesn't apply there, because that document takes its scope from the accepted offer and never creates any.
 - **Mode.** A run is *demo* when the user wants a fictional client: they say demo, sample or recording, or ask you to invent a client. Otherwise it's a *real* engagement — including a quick "test" for a client whose details look real.
 - **Offer type.** Website, AI automation/service, or both. If it isn't clear, ask in Phase 1.
-- **Existing material.** An agency identity block, call notes, a transcript, earlier answers. Extract everything already covered and ask only about real gaps.
+- **Existing material.** An agency identity block, call notes, a transcript, earlier answers, a client folder or knowledge base, and any **reference deck** (a previous offer to use as the template). Extract everything already covered and ask only about real gaps. When the user answers "you decide" to a question, choose a sensible default, say what you chose and why, and move on; do not ask again.
 
 **Automation gate.** The tier logic for AI automation/service offers isn't defined yet (see the placeholder in Phase 3). Tier boundaries are the agency's own pricing methodology, so they have to come from the user, in their own words.
 
@@ -132,6 +144,11 @@ Ask in one message, grouped, in the user's language. Skip anything already answe
 - Should prices be shown excluding tax, including tax, or with no tax line? Ask without supplying a candidate tax rate.
 - What's the minimum budget for Package 1, and does the price follow the client's budget or the agency's standard rate?
 
+**Trust and terms**
+- Which past projects or results may the deck name as proof, and which figures about them are measured versus estimated?
+- Deposit share and timing, and how any rest of the payment works. Use exactly what they say; if they give none, the deck names the step without a figure.
+- Decisions that belong to the client, for example a reservation system built into the site or an outside provider.
+
 **For the return-on-investment slide (optional)**
 - Roughly what is one new customer worth to them (average order or contract value)?
 - Roughly how many inquiries or new customers do they get per month now?
@@ -154,6 +171,10 @@ A prospect may check any number in the deck, so research comes before any statis
 - Some fetch tools return a summary of the page rather than its text, and a summary can round figures or work out ones the page never prints. When a figure reaches you only through such a summary, fetch the page again asking for the exact sentence that contains it, and use the figure only if that sentence shows it.
 - Discard a source you found blocked, unverifiable or too weak for the claim. Find a stronger source or leave the claim out.
 - If this environment has no search tool, tell the user before Phase 3. Then continue without industry figures: the deck uses qualitative points and hypothetical scenarios only. Knowledge from your own training can't be cited and may be out of date, so it doesn't count as research here.
+
+### Client brief
+
+Client research is not only web search. Read everything the user pointed to (a folder, a knowledge base, documents, listings, the client's existing site) and, where a finding decides a slide, check it yourself against the live source instead of asking the user to confirm it. Then normalise it into one brief with three groups: verified, assumption or estimate, and open. `references/offer-principles.md` shows the format. Slides draw only from verified facts and labelled assumptions.
 
 ### Research log
 
@@ -182,23 +203,26 @@ Facts about the client themselves — their services, history, team, awards — 
 
 ## Phase 3 — Packages
 
-Build the offer for the offer type from Phase 1.
+Build the offer for the offer type from Phase 1. If the user supplied a reference deck, open it now: keep its package names, number of tiers and package structure, and re-derive contents and prices for this client.
 
 ### If website:
 
 - **Package 1 — Foundation:** entry level. Single-page site. Credibility and visibility.
 - **Package 2 — Growth:** best value. Multi-page site. Lead generation and conversion. This is the one you recommend: mark it clearly and say in one sentence why it fits this client.
-- **Package 3 — Dominance:** premium. Multi-page site plus ads and SEO. A full digital system.
+- **Package 3 — Dominance:** premium. The fullest site build: more pages, further languages, a booking or reservation flow, deeper SEO, tracking and reporting, as fits this client. A full digital system.
 - **Custom package:** always offered — "Choose a base, then add or remove services. Price on request."
+
+Every package feature must be something the site build delivers, and each tier includes the one below it. Ads management and similar ongoing services are **not** part of a tier unless the agency has confirmed it delivers them and wants them there; otherwise show them as a separate optional add-on line. The tiers must differ on real dimensions (scope, content, booking, SEO, integrations, support), never the same product at three prices. `references/offer-principles.md` has the list.
 
 Write the package names in the deck language — translate Foundation / Growth / Dominance naturally — unless the agency has its own tier names.
 
 **Pricing**
 - Package 1 = the base price from Phase 1
 - Package 2 ≈ 1.7–1.9× Package 1
-- Package 3 ≈ 3–3.5× Package 1
+- Package 3 ≈ 2.5–3.5× Package 1 (toward the low end when no ads are included)
+- The ratios are a sanity check. Derive each price from the scope actually in the tier, the agency's rates and the client's situation; when a tier's content changes, re-derive its price and explain the change to the user
 - Maintenance: first month free, then a monthly fee per package, scaled to local market rates
-- Package 3's monthly fee includes ads *management*; ad spend is billed separately — say so
+- If the agency sells ads management, it is a separate add-on with its own fee; ad spend is always billed separately. Say so
 
 ### If AI automation/service:
 
@@ -243,13 +267,14 @@ Wait for the user's explicit approval before Phase 4.
 
 ## Phase 4 — Deck plan
 
-Propose this structure and ask for approval or changes:
+Read `references/workflow-and-qa.md` and `references/deck-design-and-copy.md` first. If the user supplied a reference deck, analyse it now and show its slide map (reference slide, purpose for this client, supporting research) inside the plan; that deck's sequence replaces the default below. Otherwise propose this structure and ask for approval or changes:
 
 ```
 Slide 1  — Title (agency identity, client name, date)
-Slide 2  — Why this matters now (sourced points from Phase 2)
-Slide 3  — Business analysis (current situation vs. opportunity)
-Slide 4  — Strategy for [client] specifically
+Slide 2  — Why this matters now: the opportunity (sourced points from Phase 2)
+Slide 3  — Business analysis: the diagnosis (what is true today, strengths and gaps)
+Slide 4  — Strategy for [client] specifically: what the site must do
+Optional — Why us (after Strategy, before the packages): proof and trust before price
 Slide 5  — Package 1
 Slide 6  — Package 2 (recommended)
 Slide 7  — Package 3
@@ -258,6 +283,8 @@ Slide 9  — Expected return (sourced figures and/or a labelled example)
 Slide 10 — Next steps and contact
 Optional — a dedicated custom-package slide
 ```
+
+Slides 2, 3 and 4 each answer a different question (why it matters, what is happening, what to build) and never restate one another. Give each slide in the plan a one-line purpose. Recommend the optional "why us" slide when the agency is unknown to the client, which is the usual case.
 
 If research turned up nothing reliable, propose slide 2 as qualitative points without figures, or merge it into slide 3, and say which. If the fallback identity is in use, remind the user here.
 
@@ -268,6 +295,8 @@ Wait for approval before building.
 The deliverable is one PowerPoint file (`.pptx`) that the agency can open, edit, present and send. Generate it with a script: pptxgenjs in Node or python-pptx in Python, whichever the environment has. If a pptx skill is installed, follow it for the mechanics. The script is a working file, not part of the deliverable, so keep it outside `Offer decks/` (for example in a scratch or temporary directory) and hand over only the presentation.
 
 Build every slide from native text boxes, shapes and tables, so the agency can edit any word. Use images only for the logo and real photos, never for a picture of a slide.
+
+Follow `references/deck-design-and-copy.md` for the look and the copy, including the rule that no em dash appears anywhere in the deck, its notes or its properties. Keep all copy in one content block, separate from the theme constants, so a fix is one edit and a rebuild.
 
 ### Theme
 
@@ -288,7 +317,7 @@ const THEME = {
   - The brand colors themselves stay exactly as supplied.
 - The signature accent — a rule under titles, a colored edge on package cards, the recommended badge — uses `accent`.
 - Name each font exactly as its installed files declare it. Static font files often give heavier weights their own family name, such as `Manrope ExtraBold`. Check that the fonts contain every symbol you use (✓, →, currency signs), and set a missing one in the body font.
-- A `.pptx` built this way doesn't carry its fonts. Tell the user which fonts need to be installed on the computer that opens the deck; otherwise PowerPoint or Keynote substitutes others.
+- A `.pptx` built this way doesn't carry its fonts. Confirm the fonts are installed on this machine (install them if you can), and tell the user which fonts need to be installed on the computer that opens the deck; otherwise PowerPoint or Keynote substitutes others. Keep a copy of the font files with the build script.
 
 ### Layout
 
@@ -334,8 +363,15 @@ Before handing the deck over, go through the file and confirm each item:
 - In demo runs, the demo marker is present and every contact detail is fake.
 - The file opens: every XML part in the package parses (python-pptx alone won't notice a broken one), and loading it back (for example with python-pptx) shows the right slide count, the 16:9 size and no shape outside the slide. pptxgenjs writes `company` into `docProps/app.xml` without escaping it, so escape `&`, `<` and `>` there yourself.
 - The offer record (see Output) is saved next to the deck, and its packages match the ones the user approved, word for word.
+- No em dash anywhere (slides, tables, notes, properties, offer record), no placeholder text, and the reference deck's name and facts appear nowhere in the deck.
+- Every feature in every package is delivered by the site build, and the packages differ on real dimensions.
+- Package names, prices and support fees are identical on every slide where they appear and in the record.
 
-If LibreOffice or another renderer is available, convert the deck to PDF (`soffice --headless --convert-to pdf`), render the pages (`pdftoppm -png -r 110`) and look at every slide; fix anything that clips, overflows or overlaps, and check again. Without a renderer, measure each text box against its size using the font files, tell the user the layout was measured rather than viewed, and don't claim that the slides look right.
+Run `scripts/deck_qa.py` and `scripts/fit_check.py` (see `references/workflow-and-qa.md`) after every rebuild and fix everything they report. They need `python-pptx`, `Pillow` and `lxml`; if the environment cannot run them, say so and do the same checks by hand.
+
+If LibreOffice or another renderer is available, convert the deck to PDF (`soffice --headless --convert-to pdf`), render the pages (`pdftoppm -png -r 110`) and look at every slide; fix anything that clips, overflows, overlaps or leaves a lone word on a line, and check again until a full pass finds nothing. Then go through the self-critique gate in `references/workflow-and-qa.md`. Without a renderer, measure each text box against its size using the font files, tell the user the layout was measured rather than viewed, and don't claim that the slides look right. Either way, say which application you checked: a LibreOffice render is not a PowerPoint or Keynote view.
+
+Deliver with a short list of what the user still has to confirm: claims that rest on third-party listings, projects or people the deck names, defaults you chose, assumptions behind figures, and what you could not check.
 
 ### Output
 
@@ -359,5 +395,8 @@ If LibreOffice or another renderer is available, convert the deck to PDF (`soffi
 - Packages are approved before the deck plan, and the deck plan before the build.
 - Automation tiers come from the user's own definition; until then, the automation gate applies.
 - A project scope document restates the accepted offer; it never adds scope.
-- Every feature bullet answers "what does this do for the business?"
+- Every feature bullet answers "what does this do for the business?", and every feature is something the site build delivers.
+- A reference deck is the template: keep its structure and system, change only the content. Nothing from the reference client survives in the new deck.
+- Consecutive strategy slides answer different questions; none repeats another.
+- No em dashes. A deck is not finished until it has been rendered, looked at slide by slide, and has passed the QA scripts.
 - The deck is ready for a real prospect: professional, consistent, error-free.
