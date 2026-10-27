@@ -72,6 +72,8 @@ Ask the way you would ask a colleague. For example:
 
 Research needs a web search tool. Without one, the skill says so and builds the deck without industry statistics.
 
+For a privacy-safe public walkthrough, use the [fictional demo workflow](docs/fictional-demo-workflow.md). It identifies every invented input, uses reserved `.example` contact details, and keeps research claims subject to live source verification.
+
 ### Website tiers
 
 Website offers use a built-in ladder: a single-page site, a multi-page site (the recommended tier), and a multi-page site plus ads and SEO. Package 2 is priced at about 1.7–1.9× your Package 1 budget and Package 3 at about 3–3.5×, each with a first month of support free and a monthly fee after that. Change any of it in the chat before you approve the packages.
@@ -136,6 +138,15 @@ It never adds scope the offer didn't include, and it never invents a support per
 ## Running the evals
 
 You need the evals only if you're changing the skill. Each run is a real conversation on your Claude usage, and a full iteration is 16 to 29 conversations, most of them with web research.
+
+The evaluation stack deliberately mixes automation with model-assisted judgment:
+
+- `check_deck.py`, `verify_sources.py` and `check_scope.py` perform mechanical checks against generated files and fetched source text.
+- `layout_probe.js` measures overflow, overlap, contrast, font size and navigation in a real browser; a person or agent still has to run the generated Playwright job and inspect the result.
+- `run_conversation.py` invokes the real Claude CLI, so it consumes model usage and is not a deterministic offline test.
+- `grader_prompt.md` asks a grader model to judge quality against a rubric. Those grades are model-assisted evidence, not proof that every claim or design choice is correct.
+
+No single command is an exhaustive correctness check. A release still needs source review, visual review and approval of the actual client facts, prices and scope.
 
 You need:
 
